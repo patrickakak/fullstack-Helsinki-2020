@@ -15,16 +15,12 @@ const Total = ({ parts }) => {
   return <h3>total of {total} exercises</h3>
 }
 
-const Course = ({ courses }) => {
+const Course = ({ course }) => {
   return (
     <>
-      {courses.map((course, index) =>
-        <div key={index}>
-          <Header course={course.name} />
-          <Content parts={course.parts} />
-          <Total parts={course.parts} />
-        </div>
-      )}
+      <Header course={course.name} />
+      <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </>
   )
 }
