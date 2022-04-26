@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 
 const Filter = ({ handleFilterChange }) => {
   return (
@@ -83,7 +83,7 @@ const App = () => {
   const personsToShow = persons.filter(person => person.name.toLowerCase().includes(filterText))
 
   return (
-    <div>
+    <Fragment>
       <h2>Phonebook</h2>
       <Filter handleFilterChange={handleFilterChange} />
       <h3>add a new</h3>
@@ -96,7 +96,7 @@ const App = () => {
       />
       <h3>Numbers</h3>
       <Persons personsToShow={personsToShow} />
-    </div>
+    </Fragment>
   )
 }
 
