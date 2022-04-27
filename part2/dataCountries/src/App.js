@@ -1,14 +1,7 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 
-const View = ({ country }) => {
-  const api_key = process.env.REACT_APP_API_KEY
-  console.log("api_key:", api_key)
-  axios
-    .get('https://openweathermap.org/')
-    .then(response => {
-      console.log(response.data)
-    })
+const SubView = ({ country }) => {
   return (
     <div>
       <h2>{country.name.common}</h2>
@@ -19,9 +12,48 @@ const View = ({ country }) => {
         {Object.values(country.languages).map(language => <li key={language}>{language}</li>)}
       </ul>
       <img src={country.flags['png']} alt="" />
-      <h3>Weather in {country.capital}</h3>
-
     </div>
+  )
+}
+
+const WeatherView = ({ country, weatherData }) => {
+  const weatherIconURL = `http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`
+
+  return (
+    <div>
+      <h3>Weather in {country.capital}</h3>
+      <div>temperature {(weatherData.main.temp - 273.15).toFixed(2)} Celcius</div>
+      <img src={weatherIconURL} alt="" />
+      <div>wind {weatherData.wind.speed} m/s</div>
+    </div>
+  )
+}
+
+const View = ({ country }) => {
+  const [isLoading, setLoading] = useState(true)
+  const [weatherData, setWeatherData] = useState()
+
+  const API_KEY = process.env.REACT_APP_API_KEY
+  const API_URL = `http://api.openweathermap.org/data/2.5/weather?q=${country.capital}&appid=${API_KEY}`
+  useEffect(() => {
+    axios
+      .get(API_URL)
+      .then(response => {
+        setWeatherData(response.data)
+        setLoading(false)
+      })
+  }, [API_URL])
+
+  if (isLoading) {
+    return (
+      <SubView country={country} />
+    )
+  }
+  return (
+    <>
+      <SubView country={country} />
+      <WeatherView country={country} weatherData={weatherData} />
+    </>
   )
 }
 
@@ -39,7 +71,8 @@ const Row = (props) => {
 
 const List = (props) => {
   return (
-    props.countries.map(country => <Row key={country.name.common} country={country} handleShowClick={props.handleShowClick} />)
+    props.countries.map(country =>
+      <Row key={country.name.common} country={country} handleShowClick={props.handleShowClick} />)
   )
 }
 
@@ -64,7 +97,6 @@ const App = () => {
       .get('https://restcountries.com/v3.1/all')
       .then(response => {
         setCountries(response.data)
-        // console.log(response.data)
       })
   }, [])
 
