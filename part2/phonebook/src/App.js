@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filterText, setFilterText] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -73,11 +74,18 @@ const App = () => {
     setFilterText(e.target.value.toLowerCase())
   }
 
-  const deletePersonOf = id => {
+  const deletePersonOf = per => {
     personService
-      ._delete(id)
+      ._delete(per.id)
       .then(() => {
-        setPersons(persons.filter(person => person.id !== id))
+        setPersons(persons.filter(person => person.id !== per.id))
+      })
+      .catch(error => {
+        setErrorMessage(`Information of ${per.name} has already been removed from server`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
+        setPersons(persons.filter(p => p.id !== per.id))
       })
   }
 
@@ -86,7 +94,8 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={successMessage} type="success" />
+      <Notification message={errorMessage} type="error" />
       <Filter handleFilterChange={handleFilterChange} />
       <h3>add a new</h3>
       <PersonForm
@@ -101,7 +110,7 @@ const App = () => {
         <Person
           key={person.id}
           person={person}
-          deletePerson={() => deletePersonOf(person.id)}
+          deletePerson={() => deletePersonOf(person)}
         />
       )}
     </>
