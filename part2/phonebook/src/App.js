@@ -1,47 +1,17 @@
 import { useState, useEffect } from 'react'
 
+import Filter from './components/Filter'
+import Notification from './components/Notification'
+import PersonForm from './components/PersonForm'
 import Person from './components/Person'
 import personService from './services/persons'
-
-const Filter = ({ handleFilterChange }) => {
-  return (
-    <div>
-      filter shown with
-      <input onChange={handleFilterChange} />
-    </div>
-  )
-}
-
-const PersonForm = (props) => {
-  const { addPerson, newName, handleNameChange, newNumber, handleNumberChange } = props
-  return (
-    <form onSubmit={addPerson}>
-      <div>
-        name:
-        <input
-          value={newName}
-          onChange={handleNameChange}
-        />
-      </div>
-      <div>
-        number:
-        <input
-          value={newNumber}
-          onChange={handleNumberChange}
-        />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  )
-}
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterText, setFilterText] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -85,6 +55,10 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+    setSuccessMessage(`Added ${newName} ${newNumber}`)
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 3000)
   }
 
   const handleNameChange = (e) => {
@@ -112,6 +86,7 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <Filter handleFilterChange={handleFilterChange} />
       <h3>add a new</h3>
       <PersonForm
