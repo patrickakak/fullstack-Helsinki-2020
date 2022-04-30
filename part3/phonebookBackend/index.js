@@ -37,7 +37,6 @@ app.get('/api/info', (req, res) => {
 app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   const person = persons.find(p => p.id === id)
-
   if (person) {
     res.json(person)
   } else {
@@ -57,14 +56,13 @@ const getRandomInt = max => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
-
   if (!body.name || !body.number) {
     return res.status(400).json({
       error: 'name or number is missing'
     })
   }
+  
   const found = persons.find(p => p.name === body.name)
-
   if (found) {
     return res.status(400).json({
       error: 'name must be unique'
@@ -76,9 +74,7 @@ app.post('/api/persons', (req, res) => {
     name: body.name,
     number: body.number,
   }
-
   persons = persons.concat(person)
-
   res.json(person)
 })
 
