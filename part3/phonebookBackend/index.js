@@ -28,9 +28,8 @@ let persons = [
 
 app.use(express.json())
 
-morgan.token('type', (req, _) => {
-  return JSON.stringify(req.body)
-})
+// app.use(morgan('tiny'))
+morgan.token('type', (req, _) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
 
 app.get('/api/persons', (_, res) => {
@@ -57,10 +56,6 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).send()
 })
 
-const getRandomInt = max => {
-  return Math.floor(Math.random() * max);
-}
-
 app.post('/api/persons', (req, res) => {
   const body = req.body
   if (!body.name || !body.number) {
@@ -76,6 +71,9 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
+  const getRandomInt = max => {
+    return Math.floor(Math.random() * max);
+  }
   const person = {
     id: getRandomInt(999999999),
     name: body.name,
