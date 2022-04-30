@@ -1,5 +1,4 @@
-Solutions of part 3 exercises to this folder
+Solutions of part 3 exercises to this folder, one app per folder
 
-need to install extension `REST Client` first if you use vscode<br>
-`node -v`: 16.14.0<br>
-`npm -v`: 8.3.1
+eg. the project phonebook backend for exercises 3.1.-3.6 as folder phonebookBackend<br>
+eg. 
