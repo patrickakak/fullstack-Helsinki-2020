@@ -1,4 +1,6 @@
 const express = require('express')
+const morgan = require('morgan')
+
 const app = express()
 
 let persons = [
@@ -26,11 +28,16 @@ let persons = [
 
 app.use(express.json())
 
-app.get('/api/persons', (req, res) => {
+morgan.token('type', (req, _) => {
+  return JSON.stringify(req.body)
+})
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
+
+app.get('/api/persons', (_, res) => {
   res.json(persons)
 })
 
-app.get('/api/info', (req, res) => {
+app.get('/api/info', (_, res) => {
   res.send(`<p>Phonebook has info for ${persons.length} people</p><div>${new Date()}</div>`)
 })
 
@@ -61,7 +68,7 @@ app.post('/api/persons', (req, res) => {
       error: 'name or number is missing'
     })
   }
-  
+
   const found = persons.find(p => p.name === body.name)
   if (found) {
     return res.status(400).json({
@@ -77,6 +84,12 @@ app.post('/api/persons', (req, res) => {
   persons = persons.concat(person)
   res.json(person)
 })
+
+const unknownEndpoint = (_, res) => {
+  res.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
