@@ -14,4 +14,6 @@ use platform Heroku for deploying the whole phonebook app to internet.<br>
 5. `git push heroku main` if you're in branch main
 6. (`heroku logs -t` to check your app's traffic if you like)
 
+or, since the package.json file already has `npm run deploy:full` script, when you have some files updated and need to redeploy your app, just type this command<br>
+
 my phonebook online app link: https://tranquil-lake-45868.herokuapp.com/
