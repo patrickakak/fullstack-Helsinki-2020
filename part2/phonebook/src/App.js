@@ -52,22 +52,29 @@ const App = () => {
       return
     }
 
-    const noteObject = {
+    const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     }
     personService
-      .create(noteObject)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
+      .create(personObject)
+      .then(createdPerson => {
+        setPersons(persons.concat(createdPerson))
+        setSuccessMessage(`Added ${newName} ${newNumber}`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
         setNewName('')
         setNewNumber('')
       })
-    setSuccessMessage(`Added ${newName} ${newNumber}`)
-    setTimeout(() => {
-      setSuccessMessage(null)
-    }, 5000)
+      .catch(error => {
+        // this is the way to access the error message
+        console.log(error)
+        setErrorMessage(error.response.data.error)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
   }
 
   const handleNameChange = (e) => {
