@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(cors())
 
 // app.use(morgan('tiny'))
-morgan.token('reqestBody', (req, _) => JSON.stringify(req.body))
+morgan.token('reqestBody', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :reqestBody'))
 
 app.get('/api/info', (_, res) => {
@@ -39,7 +39,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then(_ => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
