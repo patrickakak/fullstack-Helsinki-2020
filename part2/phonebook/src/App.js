@@ -36,7 +36,7 @@ const App = () => {
         setErrorMessage(`Information of ${person.name} has already been removed from server`)
         setTimeout(() => {
           setErrorMessage(null)
-        }, 3000)
+        }, 5000)
         setPersons(persons.filter(p => p.id !== person.id))
       })
   }
@@ -66,7 +66,7 @@ const App = () => {
     setSuccessMessage(`Added ${newName} ${newNumber}`)
     setTimeout(() => {
       setSuccessMessage(null)
-    }, 3000)
+    }, 5000)
   }
 
   const handleNameChange = (e) => {
