@@ -52,9 +52,7 @@ app.delete('/api/persons/:id', (req, res) => {
 app.post('/api/persons', (req, res) => {
   const body = req.body
   if (!body.name || !body.number) {
-    return res.status(400).json({
-      error: 'name or number is missing'
-    })
+    return res.status(400).json({ error: 'name or number is missing' })
   }
 
   Person.find({ name: body.name }, (_, docs) => {
