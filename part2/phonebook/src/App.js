@@ -28,16 +28,17 @@ const App = () => {
     personService
       .update(person.id, changedPerson)
       .then(returnedPerson => {
-        setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
-        setNewName('')
-        setNewNumber('')
-      })
-      .catch(_ => {
-        setErrorMessage(`Information of ${person.name} has already been removed from server`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        setPersons(persons.filter(p => p.id !== person.id))
+        if (returnedPerson) {
+          setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        } else {
+          setErrorMessage(`Information of ${person.name} has already been removed from server`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setPersons(persons.filter(p => p.id !== person.id))
+        }
       })
   }
 
@@ -81,18 +82,14 @@ const App = () => {
     setFilterText(e.target.value.toLowerCase())
   }
 
-  const deletePersonOf = per => {
+  const deletePersonOf = person => {
     personService
-      ._delete(per.id)
+      ._delete(person.id)
       .then(() => {
-        setPersons(persons.filter(person => person.id !== per.id))
+        setPersons(persons.filter(p => p.id !== person.id))
       })
-      .catch(error => {
-        setErrorMessage(`Information of ${per.name} has already been removed from server`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        setPersons(persons.filter(p => p.id !== per.id))
+      .catch(err => {
+        console.log(err)
       })
   }
 
