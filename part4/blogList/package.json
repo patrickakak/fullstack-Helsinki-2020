@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "jest --verbose"
   },
   "author": "woozway",
   "license": "ISC",
@@ -14,9 +15,15 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.18.1",
+    "lodash": "^4.17.21",
     "mongoose": "^6.3.1"
   },
   "devDependencies": {
+    "eslint": "^8.14.0",
+    "jest": "^28.0.3",
     "nodemon": "^2.0.16"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
