@@ -116,6 +116,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(blogToUpdate)
         .expect(200)
 
       const blogsAtEnd = await helper.blogsInDb()
@@ -123,6 +124,14 @@ describe('when there is initially some blogs saved', () => {
       expect(blogsAtEnd).toHaveLength(
         helper.initialBlogs.length
       )
+      expect(blogsAtEnd[0].likes).toBe(blogsAtStart[0].likes + 1)
+    })
+
+    test('fails with status code 400 if id is invalid', async () => {
+      await api
+        .put('/api/blogs/1')
+        .send({})
+        .expect(400)
     })
   })
 })
