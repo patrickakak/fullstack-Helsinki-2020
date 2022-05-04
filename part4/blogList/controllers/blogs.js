@@ -12,7 +12,6 @@ blogsRouter.post('/', async (request, response) => {
   const body = request.body
   const user = request.user
   const userhandle = await User.findById(user.id)
-  // console.log('user in blogsRounter:', user)
 
   const blog = new Blog({
     title: body.title,
