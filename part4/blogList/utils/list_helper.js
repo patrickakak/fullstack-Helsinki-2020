@@ -22,37 +22,21 @@ const favoriteBlog = blogs => {
   return favorite
 }
 
-// var _ = require('lodash')
+const _ = require('lodash')
 const mostBlogs = blogs => {
-  const hashMap = new Map()
-  for (const blog of blogs) {
-    if (hashMap.has(blog.author)) {
-      const cur = hashMap.get(blog.author)
-      hashMap.set(blog.author, cur + 1)
-    } else {
-      hashMap.set(blog.author, 1)
-    }
+  const hashMap = _.countBy(blogs.map(blog => blog.author))
+  const authorWithMostBlogs = Object.keys(hashMap).reduce((a, b) => hashMap[a] > hashMap[b] ? a : b, '')
+  return {
+    author: authorWithMostBlogs,
+    blogs: hashMap[authorWithMostBlogs]
   }
-  let authorWithMostBlogs = {}
-  let maxBlog = 0
-  for (const [key, value] of hashMap.entries()) {
-    if (maxBlog < value) {
-      maxBlog = value
-      authorWithMostBlogs = {
-        author: key,
-        blogs: maxBlog
-      }
-    }
-  }
-  return authorWithMostBlogs
 }
 
 const mostLikes = blogs => {
   const hashMap = new Map()
   for (const blog of blogs) {
     if (hashMap.has(blog.author)) {
-      const cur = hashMap.get(blog.author)
-      hashMap.set(blog.author, cur + blog.likes)
+      hashMap.set(blog.author, hashMap.get(blog.author) + blog.likes)
     } else {
       hashMap.set(blog.author, blog.likes)
     }
