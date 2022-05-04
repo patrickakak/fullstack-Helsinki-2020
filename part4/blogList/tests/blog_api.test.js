@@ -5,16 +5,68 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 
-describe('when there is initially some blogs saved', () => {
+describe('when there is initially one user in db', () => {
   beforeEach(async () => {
-    await Blog.deleteMany({})
-    await Blog.insertMany(helper.initialBlogs)
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('root', 10)
+    const user = new User({ username: 'root', name: 'woozway', passwordHash })
+
+    await user.save()
   }, 100000)
 
+  test('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'salainen',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).toContain(newUser.username)
+  })
+
+  test('creation fails with proper statuscode and message if username already taken', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'root',
+      name: 'Superuser',
+      password: 'salainen',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('username must be unique')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+})
+
+describe('when there is initially no blogs saved', () => {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
+      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyNzIwYWE3YjY3NjdjYTIwZjYyNjRkZCIsImlhdCI6MTY1MTY1NDkzOCwiZXhwIjoxNjUxNjU4NTM4fQ.qyv0kk4ZeQ1QFaPO95AUcYirWTJXxarh3HdLuSXEWOQ')
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
@@ -36,6 +88,7 @@ describe('when there is initially some blogs saved', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyNzI0NWYxMGRjMzgyN2M2N2ZiZGU0YyIsImlhdCI6MTY1MTY1NjM4MCwiZXhwIjoxNjUxNjU5OTgwfQ.AdqvYtgz3HND--uk8FMCvtlVki-optrwh7bLnUwTPaQ')
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -60,14 +113,16 @@ describe('when there is initially some blogs saved', () => {
         likes: 4,
       }
 
+      const blogsAtStart = await helper.blogsInDb()
       await api
         .post('/api/blogs')
+        .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyNzI0NWYxMGRjMzgyN2M2N2ZiZGU0YyIsImlhdCI6MTY1MTY1NjM4MCwiZXhwIjoxNjUxNjU5OTgwfQ.AdqvYtgz3HND--uk8FMCvtlVki-optrwh7bLnUwTPaQ')
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
       const blogsAtEnd = await helper.blogsInDb()
-      expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+      expect(blogsAtEnd).toHaveLength(blogsAtStart.length + 1)
 
       const titles = blogsAtEnd.map(b => b.title)
       expect(titles).toContainEqual(
@@ -78,14 +133,25 @@ describe('when there is initially some blogs saved', () => {
     test('fails with status code 400 if data invalid', async () => {
       const newBlog = {}
 
+      const blogsAtStart = await helper.blogsInDb()
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyNzI0NWYxMGRjMzgyN2M2N2ZiZGU0YyIsImlhdCI6MTY1MTY1NjM4MCwiZXhwIjoxNjUxNjU5OTgwfQ.AdqvYtgz3HND--uk8FMCvtlVki-optrwh7bLnUwTPaQ')
         .expect(400)
 
       const blogsAtEnd = await helper.blogsInDb()
 
-      expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+      expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+    })
+
+    test('fails with status code 401 Unauthorized if a token is not provided', async () => {
+      const newBlog = {}
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
     })
   })
 
@@ -96,6 +162,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .delete(`/api/blogs/${blogToDelete.id}`)
+        .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyNzI0NWYxMGRjMzgyN2M2N2ZiZGU0YyIsImlhdCI6MTY1MTY1NjM4MCwiZXhwIjoxNjUxNjU5OTgwfQ.AdqvYtgz3HND--uk8FMCvtlVki-optrwh7bLnUwTPaQ')
         .expect(204)
 
       const blogsAtEnd = await helper.blogsInDb()
