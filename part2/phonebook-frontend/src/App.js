@@ -100,7 +100,7 @@ const App = () => {
 
       <h3>add a new</h3>
       <PersonForm
-        addPerson={addPerson}
+        onSubmit={addPerson}
         newName={newName}
         handleNameChange={(e) => setNewName(e.target.value)}
         newNumber={newNumber}

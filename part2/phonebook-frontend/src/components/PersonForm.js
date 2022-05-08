@@ -1,31 +1,33 @@
 import InputField from './InputField'
 
-const Form = (props) => {
-  const { addPerson, newName, handleNameChange, newNumber, handleNumberChange } = props
+const PersonForm = ({
+  onSubmit,
+  newName,
+  handleNameChange,
+  newNumber,
+  handleNumberChange
+}) => (
+  <form onSubmit={onSubmit}>
+    <InputField
+      label='name:'
+      htmlFor='name'
+      type='text'
+      value={newName}
+      onChange={handleNameChange}
+    />
 
-  return (
-    <form onSubmit={addPerson}>
-      <InputField
-        label='name:'
-        htmlFor='name'
-        type='text'
-        value={newName}
-        onChange={handleNameChange}
-      />
+    <InputField
+      label='number:'
+      htmlFor='number'
+      type='text'
+      value={newNumber}
+      onChange={handleNumberChange}
+    />
 
-      <InputField
-        label='number:'
-        htmlFor='number'
-        type='text'
-        value={newNumber}
-        onChange={handleNumberChange}
-      />
+    <div>
+      <button type="submit">add</button>
+    </div>
+  </form>
+)
 
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  )
-}
-
-export default Form
+export default PersonForm
