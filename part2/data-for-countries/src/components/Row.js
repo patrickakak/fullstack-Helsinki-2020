@@ -1,11 +1,8 @@
-const Row = (props) => {
-  const handleShowClick = () => {
-    props.handleShowClick(props.country.name.common)
-  }
+const Row = ({ country, handleShowClick }) => {
   return (
     <div>
-      {props.country.name.common}
-      <button onClick={handleShowClick}>show</button>
+      {country.name.common}
+      <button onClick={() => handleShowClick(country.name.common)}>show</button>
     </div>
   )
 }
