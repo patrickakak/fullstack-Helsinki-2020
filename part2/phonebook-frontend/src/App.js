@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-
 import Filter from './components/Filter'
 import Notification from './components/Notification'
 import PersonForm from './components/PersonForm'
-import Person from './components/Person'
+import Persons from './components/Persons'
 import personService from './services/persons'
 
 const App = () => {
@@ -77,19 +76,7 @@ const App = () => {
       })
   }
 
-  const handleNameChange = (e) => {
-    setNewName(e.target.value)
-  }
-
-  const handleNumberChange = (e) => {
-    setNewNumber(e.target.value)
-  }
-
-  const handleFilterChange = (e) => {
-    setFilterText(e.target.value.toLowerCase())
-  }
-
-  const deletePersonOf = person => {
+  const deletePerson = person => {
     personService
       ._delete(person.id)
       .then(() => {
@@ -100,30 +87,28 @@ const App = () => {
       })
   }
 
-  const personsToShow = persons.filter(person => person.name.toLowerCase().includes(filterText))
+  const personsToShow = persons.filter(
+    person => person.name.toLowerCase().includes(filterText)
+  )
 
   return (
     <>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} type="success" />
-      <Notification message={errorMessage} type="error" />
-      <Filter handleFilterChange={handleFilterChange} />
+      <Notification message={successMessage} type='success' />
+      <Notification message={errorMessage} type='error' />
+      <Filter handleFilterChange={(e) => setFilterText(e.target.value.toLowerCase())} />
+
       <h3>add a new</h3>
       <PersonForm
         addPerson={addPerson}
         newName={newName}
-        handleNameChange={handleNameChange}
+        handleNameChange={(e) => setNewName(e.target.value)}
         newNumber={newNumber}
-        handleNumberChange={handleNumberChange}
+        handleNumberChange={(e) => setNewNumber(e.target.value)}
       />
+
       <h3>Numbers</h3>
-      {personsToShow.map(person =>
-        <Person
-          key={person.id}
-          person={person}
-          deletePerson={() => deletePersonOf(person)}
-        />
-      )}
+      <Persons personsToShow={personsToShow} op={deletePerson} />
     </>
   )
 }
