@@ -96,15 +96,15 @@ const App = () => {
       <h2>Phonebook</h2>
       <Notification message={successMessage} type='success' />
       <Notification message={errorMessage} type='error' />
-      <Filter handleFilterChange={(e) => setFilterText(e.target.value.toLowerCase())} />
+      <Filter handleFilterChange={e => setFilterText(e.target.value.toLowerCase())} />
 
       <h3>add a new</h3>
       <PersonForm
         onSubmit={addPerson}
         newName={newName}
-        handleNameChange={(e) => setNewName(e.target.value)}
+        handleNameChange={e => setNewName(e.target.value)}
         newNumber={newNumber}
-        handleNumberChange={(e) => setNewNumber(e.target.value)}
+        handleNumberChange={e => setNewNumber(e.target.value)}
       />
 
       <h3>Numbers</h3>
