@@ -15,15 +15,36 @@ const Statistics = ({ good, neutral, bad }) => {
   if (all === 0) {
     return <p>No feedback given</p>
   }
+  const pairs = [
+    {
+      text: "good",
+      value: good,
+    },
+    {
+      text: "neutral",
+      value: neutral,
+    },
+    {
+      text: "bad",
+      value: bad,
+    },
+    {
+      text: "all",
+      value: all,
+    },
+    {
+      text: "average",
+      value: average,
+    },
+    {
+      text: "positive",
+      value: positive,
+    },
+  ]
   return (
     <table>
       <tbody>
-        <Statistic text="good" value={good} />
-        <Statistic text="neutral" value={neutral} />
-        <Statistic text="bad" value={bad} />
-        <Statistic text="all" value={all} />
-        <Statistic text="average" value={average} />
-        <Statistic text="positive" value={positive} />
+        {pairs.map(pair => <Statistic key={pair.text} text={pair.text} value={pair.value} />)}
       </tbody>
     </table>
   )
