@@ -19,19 +19,24 @@ const Statistics = ({ good, neutral, bad }) => {
     {
       text: "good",
       value: good,
-    }, {
+    },
+    {
       text: "neutral",
       value: neutral,
-    }, {
+    },
+    {
       text: "bad",
       value: bad,
-    }, {
+    },
+    {
       text: "all",
       value: all,
-    }, {
+    },
+    {
       text: "average",
       value: average,
-    }, {
+    },
+    {
       text: "positive",
       value: positive,
     },
