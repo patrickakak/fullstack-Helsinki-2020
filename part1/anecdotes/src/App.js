@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-const Display = ({ text, anecdotes, points, index }) => {
+const Anecdote = ({ title, anecdote, point }) => {
   return (
     <>
-      <h1>{text}</h1>
-      <div>{anecdotes[index]}</div>
-      <div>has {points[index]} votes</div>
+      <h1>{title}</h1>
+      <p>
+        {anecdote}<br />
+        has {point} votes
+      </p>
     </>
   )
 }
@@ -24,32 +26,36 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
-  const [points, setPoints] = useState(new Uint8Array(anecdotes.length))
-  const [mostVoteIndex, setMost] = useState(0)
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0))
+  const [mostVote, setMostVote] = useState(0)
 
   const getRandomInt = max => Math.floor(Math.random() * max)
-  const handleNextAnecdote = () => setSelected(getRandomInt(anecdotes.length))
+  const handleNextAnecdote = () => {
+    let newSelected = getRandomInt(anecdotes.length)
+    while (selected === newSelected)
+      newSelected = getRandomInt(anecdotes.length)
+    setSelected(newSelected)
+  }
 
   const handleVote = () => {
-    const copy = [...points]
-    copy[selected] += 1
-    setPoints(copy)
-
-    let mostIndex = 0
-    for (let i = 0; i < copy.length; i++) {
-      if (copy[mostIndex] < copy[i]) {
-        mostIndex = i
-      }
-    }
-    setMost(mostIndex)
+    const pointsCopy = [...points]
+    pointsCopy[selected]++
+    setPoints(pointsCopy)
   }
+
+  useEffect(() => {
+    const index = points.indexOf(Math.max(...points))
+    if (points[index] > points[mostVote]) {
+      setMostVote(index)
+    }
+  }, [points, mostVote])
 
   return (
     <>
-      <Display text="Anecdote of the day" anecdotes={anecdotes} points={points} index={selected} />
+      <Anecdote title="Anecdote of the day" anecdote={anecdotes[selected]} point={points[selected]} />
       <Button handleClick={handleVote} text="vote" />
       <Button handleClick={handleNextAnecdote} text="next anecdote" />
-      <Display text="Anecdote with most votes" anecdotes={anecdotes} points={points} index={mostVoteIndex} />
+      <Anecdote title="Anecdote with most votes" anecdote={anecdotes[mostVote]} point={points[mostVote]} />
     </>
   )
 }
