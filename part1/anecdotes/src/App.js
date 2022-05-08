@@ -48,7 +48,7 @@ const App = () => {
     if (points[index] > points[mostVote]) {
       setMostVote(index)
     }
-  }, [points])
+  }, [points, mostVote])
 
   return (
     <>
