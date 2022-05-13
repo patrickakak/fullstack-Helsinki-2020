@@ -1,8 +1,8 @@
-require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
+require('dotenv').config()
 const Person = require('./models/person')
 
 app.use(express.static('build'))
@@ -64,9 +64,7 @@ app.post('/api/persons', (req, res, next) => {
 
   Person.find({ name: body.name }, (_, docs) => {
     if (docs.length > 0) {
-      return res.status(400).json({
-        error: 'name must be unique'
-      })
+      return res.status(400).json({ error: 'name must be unique' })
     } else {
       const person = new Person({
         name: body.name,
