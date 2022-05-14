@@ -9,13 +9,20 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
 
-// app.use(morgan('tiny'))
-morgan.token('reqestBody', (req) => JSON.stringify(req.body))
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :reqestBody'))
+// Configure morgan to log body of POST request
+morgan.token('reqestBody', (req) => {
+  if (req.method === 'POST') return JSON.stringify(req.body)
+  return null
+})
+app.use(
+  morgan(
+    ':method :url :status :res[content-length] - :response-time ms :reqestBody',
+  ),
+)
 
-app.get('/api/info', (_, res) => {
+app.get('/info', (_, res) => {
   Person.find({}).then(persons => {
-    res.send(`<p>Phonebook has info for ${persons.length} people</p><div>${new Date()}</div>`)
+    res.send(`<p>Phonebook has info for ${persons.length} people</p><span>${new Date()}</span>`)
   })
 })
 
@@ -82,18 +89,22 @@ app.post('/api/persons', (req, res, next) => {
 const unknownEndpoint = (_, res) => {
   res.status(404).send({ error: 'unknown endpoint' })
 }
+
 // handler of requests with unknown endpoint
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
+
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
+
   next(error)
 }
+
 // this has to be the last loaded middleware.
 app.use(errorHandler)
 
