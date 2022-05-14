@@ -10,10 +10,10 @@ const User = require('../models/user')
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
-  const promiseArray = blogObjects.map((blog) => blog.save())
+  const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
+  const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
-})
+}, 100000)
 
 describe('when there are some blogs save initially', () => {
   test('blogs are returned as json', async () => {
@@ -90,7 +90,7 @@ describe('addition of new blog', () => {
       })
 
     return token
-  })
+  }, 1000000)
 
   test('a valid blog can be added by authorized user', async () => {
     const newBlog = {
