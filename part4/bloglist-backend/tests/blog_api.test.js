@@ -88,8 +88,6 @@ describe('addition of new blog', () => {
       .then((res) => {
         return (token = res.body.token)
       })
-
-    return token
   }, 1000000)
 
   test('a valid blog can be added by authorized user', async () => {
@@ -109,13 +107,13 @@ describe('addition of new blog', () => {
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-    const titles = blogsAtEnd.map((b) => b.title)
+    const titles = blogsAtEnd.map(b => b.title)
 
     expect(titles).toHaveLength(helper.initialBlogs.length + 1)
     expect(titles).toContain('New blog')
   })
 
-  test('if like property is misssing from req, it will default to value 0', async () => {
+  test('if like property is misssing from request, it will default to value 0', async () => {
     const newBlog = {
       title: 'Another blog',
       author: 'Jane Doe',
@@ -158,11 +156,8 @@ describe('addition of new blog', () => {
       url: 'http://dummyurl.com',
     }
 
-    token = null
-
     await api
       .post('/api/blogs')
-      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(401)
 
@@ -179,14 +174,14 @@ describe('deletion of blog', () => {
     await User.deleteMany({})
 
     const passwordHash = await bcrypt.hash('password', 10)
-    const user = new User({ username: 'jane', passwordHash })
+    const user = new User({ username: 'root', passwordHash })
 
     await user.save()
 
     // Login user to get token
     await api
       .post('/api/login')
-      .send({ username: 'jane', password: 'password' })
+      .send({ username: 'root', password: 'password' })
       .then((res) => {
         return (token = res.body.token)
       })
@@ -207,7 +202,7 @@ describe('deletion of blog', () => {
     return token
   })
 
-  test('succeeds with status 402 if id is valid', async () => {
+  test('succeeds with status 204 if id is valid', async () => {
     const blogsAtStart = await Blog.find({}).populate('user')
 
     const blogToDelete = blogsAtStart[0]
@@ -244,22 +239,52 @@ describe('deletion of blog', () => {
 })
 
 describe('updating of likes of blog', () => {
+  let token = null
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('password', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+
+    // Login user to get token
+    await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'password' })
+      .then((res) => {
+        return (token = res.body.token)
+      })
+
+    const newBlog = {
+      title: 'Another blog',
+      author: 'Jane Doe',
+      url: 'http://dummyurl.com',
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    return token
+  })
+
   test('succeeds with status 400 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
-
     const blogToUpdate = blogsAtStart[0]
 
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ likes: 12 })
       .expect(200)
 
     const blogsAtEnd = await helper.blogsInDb()
-
     const updatedBlog = blogsAtEnd[0]
-
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
-
     expect(updatedBlog.likes).toBe(12)
   })
 
@@ -268,6 +293,7 @@ describe('updating of likes of blog', () => {
 
     await api
       .put(`/api/blogs/${validNonexistingId}`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ likes: 12 })
       .expect(404)
   })
@@ -275,7 +301,11 @@ describe('updating of likes of blog', () => {
   test('fails with statuscode 400 id is invalid', async () => {
     const invalidId = '5e8cae887f883f27e06f54a66'
 
-    await api.put(`/api/blogs/${invalidId}`).send({ likes: 12 }).expect(400)
+    await api
+      .put(`/api/blogs/${invalidId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ likes: 12 })
+      .expect(400)
   })
 })
 
