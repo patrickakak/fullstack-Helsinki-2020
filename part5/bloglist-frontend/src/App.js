@@ -41,7 +41,7 @@ const App = () => {
   return (
     <div>
       <h2>Log in to application</h2>
-      <Notification message={errorMessage} type='error'/>
+      <Notification message={errorMessage} type='error' />
       {user === null ?
         <LoginForm
           handleLogin={handleLogin}
