@@ -9,25 +9,28 @@ const requestLogger = (req, res, next) => {
   next()
 }
 
-const getTokenFrom = req => {
-  const authorization = req.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
-  }
-  return null
-}
-
 const tokenExtractor = (req, res, next) => {
-  req.user = {}
-  req.user.token = getTokenFrom(req)
+  const getTokenFrom = req => {
+    const authorization = req.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+      return authorization.substring(7)
+    }
+    return null
+  }
+
+  req.user = {
+    token: getTokenFrom(req)
+  }
   next()
 }
 
 const userExtractor = (req, res, next) => {
-  const decodedToken = jwt.verify(req.user.token, process.env.SECRET)
-  if (decodedToken.id) {
-    req.user.username = decodedToken.username
-    req.user.id = decodedToken.id
+  if (req.method !== 'GET') {
+    const decodedToken = jwt.verify(req.user.token, process.env.SECRET)
+    if (decodedToken.id) {
+      req.user.username = decodedToken.username
+      req.user.id = decodedToken.id
+    }
   }
   next()
 }
