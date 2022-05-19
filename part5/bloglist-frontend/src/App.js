@@ -8,8 +8,7 @@ import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [successMessage, setSuccessMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [msg, setMsg] = useState({ text: '', type: '' })
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -19,7 +18,7 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const handleLogin = async (event) => {
+  const handleLogin = async event => {
     event.preventDefault()
 
     try {
@@ -34,9 +33,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setMsg({ text: 'Wrong credentials', type: 'error' })
       setTimeout(() => {
-        setErrorMessage(null)
+        setMsg({ text: '', type: '' })
       }, 5000)
     }
   }
@@ -60,14 +59,17 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
-      setSuccessMessage(`A new blog ${newObject.title} by ${newObject.author} added`)
+      setMsg({
+        text: `A new blog ${newObject.title} by ${newObject.author} added`,
+        type: 'success'
+      })
       setTimeout(() => {
-        setSuccessMessage(null)
+        setMsg({ text: '', type: '' })
       }, 5000)
     } catch (exception) {
-      setErrorMessage('exception in handleCreate try catch!')
+      setMsg({ text: 'exception in handleCreate try catch!', type: 'error' })
       setTimeout(() => {
-        setErrorMessage(null)
+        setMsg({ text: '', type: '' })
       }, 5000)
     }
   }
@@ -79,7 +81,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    const loggedUserJSON = window.localStorage.getItem('loggedInBloglistUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -90,8 +92,7 @@ const App = () => {
   return (
     <div>
       {user === null ? <h2>Log in to application</h2> : <h2>blogs</h2>}
-      <Notification message={successMessage} type='success' />
-      <Notification message={errorMessage} type='error' />
+      <Notification msg={msg} />
       {user === null &&
         <LoginForm
           handleLogin={handleLogin}
