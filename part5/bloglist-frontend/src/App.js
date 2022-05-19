@@ -57,6 +57,9 @@ const App = () => {
       await blogService.create(newObject)
       const updatedBlogs = await blogService.getAll()
       setBlogs(updatedBlogs)
+      setTitle('')
+      setAuthor('')
+      setUrl('')
       setSuccessMessage(`A new blog ${newObject.title} by ${newObject.author} added`)
       setTimeout(() => {
         setSuccessMessage(null)
@@ -94,8 +97,8 @@ const App = () => {
           handleLogin={handleLogin}
           username={username}
           password={password}
-          setUsername={setUsername}
-          setPassword={setPassword}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
         />
       }
       {user !== null &&
@@ -108,11 +111,11 @@ const App = () => {
           <BlogForm
             handleCreate={handleCreate}
             title={title}
-            setTitle={setTitle}
             author={author}
-            setAuthor={setAuthor}
             url={url}
-            setUrl={setUrl}
+            handleTitleChange={({ target }) => setTitle(target.value)}
+            handleAuthorChange={({ target }) => setAuthor(target.value)}
+            handleUrlChange={({ target }) => setUrl(target.value)}
           />
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />

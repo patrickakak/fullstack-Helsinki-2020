@@ -1,11 +1,11 @@
 const BlogForm = ({
   handleCreate,
   title,
-  setTitle,
   author,
-  setAuthor,
   url,
-  setUrl,
+  handleTitleChange,
+  handleAuthorChange,
+  handleUrlChange,
 }) => (
   <form onSubmit={handleCreate}>
     <div>
@@ -14,7 +14,7 @@ const BlogForm = ({
         type='text'
         value={title}
         name='Title'
-        onChange={({ target }) => setTitle(target.value)}
+        onChange={handleTitleChange}
       />
     </div>
     <div>
@@ -23,7 +23,7 @@ const BlogForm = ({
         type='text'
         value={author}
         name='Author'
-        onChange={({ target }) => setAuthor(target.value)}
+        onChange={handleAuthorChange}
       />
     </div>
     <div>
@@ -32,7 +32,7 @@ const BlogForm = ({
         type='text'
         value={url}
         name='Url'
-        onChange={({ target }) => setUrl(target.value)}
+        onChange={handleUrlChange}
       />
     </div>
     <button type='submit'>create</button>
