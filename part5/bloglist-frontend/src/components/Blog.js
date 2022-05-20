@@ -1,7 +1,8 @@
 import { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateLikes, removeBlog, user }) => {
   const [visible, setVisible] = useState(false)
+  const [postedBy, setPostedBy] = useState('')
 
   const blogStyle = {
     paddingTop: 10,
@@ -13,6 +14,23 @@ const Blog = ({ blog }) => {
 
   const detailsStyle = {
     display: visible ? '' : 'none'
+  }
+
+  const update = () => {
+    const newBlog = {
+      ...blog,
+      user: blog.user.id,
+      likes: blog.likes + 1,
+    }
+
+    setPostedBy(postedBy || blog.user.username)
+    updateLikes(blog.id, newBlog)
+  }
+
+  const remove = () => {
+    if (window.confirm(`Remove blog You're NOT gonna need it! by ${blog.user.username}?`)) {
+      removeBlog(blog.id)
+    }
   }
 
   return (
@@ -27,9 +45,14 @@ const Blog = ({ blog }) => {
         <div>{blog.url}</div>
         <div>
           likes {blog.likes}
-          <button>like</button>
+          <button onClick={update}>like</button>
         </div>
-        <div>{blog.user.username}</div>
+        <div>{blog.user.username || postedBy}</div>
+        {(blog.user.username === user.username || postedBy === user.username) && (
+          <button onClick={remove}>
+            remove
+          </button>
+        )}
       </div>
     </div>
   )
