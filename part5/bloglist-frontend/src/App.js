@@ -18,11 +18,9 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(blogs =>
-        setBlogs(blogs)
-      )
+    blogService.getAll().then(blogs =>
+      setBlogs(blogs)
+    )
   }, [])
 
   useEffect(() => {
@@ -72,19 +70,15 @@ const App = () => {
   }
 
   const addLikes = (id, blogObject) => {
-    blogService
-      .update(id, blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
-      })
+    blogService.update(id, blogObject).then(returnedBlog => {
+      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+    })
   }
 
   const deleteBlog = id => {
-    blogService
-      ._delete(id)
-      .then(ret => {
-        setBlogs(blogs.filter(blog => blog.id !== id))
-      })
+    blogService._delete(id).then(ret => {
+      setBlogs(blogs.filter(blog => blog.id !== id))
+    })
   }
 
   const handleLogout = () => {
