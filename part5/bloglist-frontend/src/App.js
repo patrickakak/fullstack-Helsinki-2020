@@ -12,9 +12,6 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [msg, setMsg] = useState({ text: '', type: '' })
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -32,8 +29,7 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async event => {
-    event.preventDefault()
+  const handleLogin = async (username, password) => {
     try {
       const user = await loginService.login({
         username, password,
@@ -43,8 +39,6 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       setMsg({ text: 'Wrong credentials', type: 'error' })
       setTimeout(() => {
@@ -92,17 +86,9 @@ const App = () => {
     <div>
       {user === null ? <h2>Log in to application</h2> : <h2>blogs</h2>}
       <Notification msg={msg} />
-      {user === null &&
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-        />
-      }
+      {user === null && <LoginForm handleLogin={handleLogin} />}
       {user !== null &&
-        <div>
+        <>
           <div>
             {user.username} logged in
             <button onClick={handleLogout}>logout</button>
@@ -124,7 +110,7 @@ const App = () => {
                 removeBlog={deleteBlog}
               />
             )}
-        </div>
+        </>
       }
     </div>
   )
