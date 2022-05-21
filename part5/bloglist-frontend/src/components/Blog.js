@@ -23,12 +23,14 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
       likes: blog.likes + 1,
     }
 
-    setPostedBy(postedBy || blog.user.username)
+    setPostedBy(postedBy || blog.user?.username)
     updateLikes(blog.id, newBlog)
   }
 
   const remove = () => {
-    if (window.confirm(`Remove blog You're NOT gonna need it! by ${blog.user.username}?`)) {
+    if (window.confirm(
+      `Remove blog You're NOT gonna need it! By ${blog.user?.username || postedBy || user?.username}?`
+    )) {
       removeBlog(blog.id)
     }
   }
@@ -47,8 +49,8 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
           likes {blog.likes}
           <button onClick={update}>like</button>
         </div>
-        <div>{blog.user.username || postedBy || user.username}</div>
-        {(blog.user.username === user.username || postedBy === user.username || (!blog.user.username && !postedBy)) && (
+        <div>{blog.user?.username || postedBy || user?.username}</div>
+        {(blog.user?.username === user?.username || postedBy === user?.username || (!blog.user?.username && !postedBy)) && (
           <button onClick={remove}>
             remove
           </button>
