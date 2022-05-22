@@ -19,7 +19,7 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
   const update = () => {
     const newBlog = {
       ...blog,
-      user: blog.user.id,
+      user: blog.user?.id,
       likes: blog.likes + 1,
     }
 
