@@ -14,8 +14,8 @@ test('renders the blog title and author, not its url or number of likes by defau
 
   const container = render(<Blog blog={blog} />).container
 
-  const divOutline = container.querySelector('.summary')
-  expect(divOutline).not.toHaveStyle('display: none')
+  const divSummary = container.querySelector('.summary')
+  expect(divSummary).not.toHaveStyle('display: none')
 
   const divDetails = container.querySelector('.details')
   expect(divDetails).toHaveStyle('display: none')
