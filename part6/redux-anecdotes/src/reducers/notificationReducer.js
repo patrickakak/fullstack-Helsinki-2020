@@ -13,7 +13,7 @@ const notificationReducer = (state = initialState, action) => {
 }
 
 export const setNotification = notification => {
-  return async (dispatch) => {
+  return async dispatch => {
     dispatch({
       type: 'SET_NOTIFICATION',
       data: {
