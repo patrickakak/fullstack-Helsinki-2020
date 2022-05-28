@@ -1,12 +1,10 @@
-const initialState = ''
-
-const notificationReducer = (state = initialState, action) => {
+const notificationReducer = (state = '', action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
       clearTimeout(state.delay)
       return action.data.notification
     case 'REMOVE_NOTIFICATION':
-      return initialState
+      return ''
     default:
       return state
   }
