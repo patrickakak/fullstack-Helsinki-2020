@@ -1,12 +1,9 @@
-import { useDispatch } from 'react-redux'
 import { filterChange } from "../reducers/filterReducer"
+import { connect } from 'react-redux'
 
-const Filter = () => {
-  const dispatch = useDispatch()
-
+const Filter = (props) => {
   const handleChange = (event) => {
-    // input-field value is in variable event.target.value
-    dispatch(filterChange(event.target.value))
+    props.filterChange(event.target.value)
   }
   const style = {
     marginBottom: 10
@@ -19,4 +16,16 @@ const Filter = () => {
   )
 }
 
-export default Filter
+// Alternatively, we could pass the following function definition as the second parameter to `connect`
+const mapDispatchToProps = dispatch => {
+  return {
+    filterChange: value => {
+      dispatch(filterChange(value))
+    }
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Filter)
