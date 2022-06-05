@@ -1,10 +1,10 @@
 const Notification = ({ msg }) => {
-  if (msg.text === '') {
+  if (msg.message.text === '') {
     return null
   }
   return (
-    <div className={msg.type}>
-      {msg.text}
+    <div className={msg.message.type}>
+      {msg.message.text}
     </div>
   )
 }
