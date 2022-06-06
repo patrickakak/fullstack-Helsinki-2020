@@ -4,7 +4,7 @@ const initialState = JSON.parse(
   window.localStorage.getItem('loggedBlogappUser'),
 )
 
-const userReducer = (state = initialState, action) => {
+const loginReducer = (state = initialState, action) => {
   switch (action.type) {
   case 'LOGIN':
     return action.data
@@ -15,7 +15,7 @@ const userReducer = (state = initialState, action) => {
   }
 }
 
-export const userLogin = (username, password) => {
+export const login = (username, password) => {
   return async dispatch => {
     const user = await loginService.login({ username, password })
     dispatch({
@@ -25,10 +25,10 @@ export const userLogin = (username, password) => {
   }
 }
 
-export const userLogout = () => {
+export const logout = () => {
   return {
     type: 'LOGOUT',
   }
 }
 
-export default userReducer
+export default loginReducer

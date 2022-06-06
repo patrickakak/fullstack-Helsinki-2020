@@ -9,13 +9,13 @@ import Togglable from './components/Togglable'
 
 import { initialiseBlogs, createBlog, updateLikes, deleteBlog, setToken } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
-import { userLogin, userLogout } from './reducers/userReducer'
+import { login, logout } from './reducers/loginReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
-  const user = useSelector(state => state.user)
+  const user = useSelector(state => state.login)
 
   useEffect(() => {
     dispatch(initialiseBlogs())
@@ -30,7 +30,7 @@ const App = () => {
 
   const handleLogin = async (username, password) => {
     try {
-      await dispatch(userLogin(username, password))
+      await dispatch(login(username, password))
     } catch (exception) {
       dispatch(setNotification({
         text: 'Wrong credentials',
@@ -58,7 +58,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
-    dispatch(userLogout())
+    dispatch(logout())
   }
 
   const blogFormRef = useRef()
