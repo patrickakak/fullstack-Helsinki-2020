@@ -10,36 +10,31 @@ import { setNotification } from '../reducers/notificationReducer'
 import CommentForm from './CommentForm'
 
 const BlogView = () => {
-  const blogs = useSelector((state) => state.blogs)
-  const user = useSelector((state) => state.login)
+  const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.login)
 
   const dispatch = useDispatch()
   const history = useHistory()
 
   const match = useRouteMatch('/blogs/:id')
-  const blog = match ? blogs?.find((blog) => blog.id === match.params.id) : null
+  const blog = match ? blogs.find(blog => blog.id === match.params.id) : null
 
   const addLike = async () => {
     try {
       const { id, author, url, title } = blog
       const updatedBlog = {
-        user: blog.user?.id || blog.user,
+        user: blog.user.id || blog.user,
         likes: blog.likes + 1,
         title,
         author,
         url,
       }
-
       dispatch(likeBlog(id, updatedBlog))
     } catch (err) {
-      console.error(err)
       dispatch(
-        setNotification(
-          {
-            error: `No nooo! ${err}`,
-          },
-          5,
-        ),
+        setNotification({
+          error: `No nooo! ${err}`,
+        }, 5),
       )
     }
   }
@@ -47,27 +42,20 @@ const BlogView = () => {
   const deleteBlog = async (id, blog) => {
     try {
       if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
-        // delete blog from db
         dispatch(removeBlog(id))
-        history.push(`/blogs`)
+        history.push('/blogs')
         dispatch(
-          setNotification(
-            {
-              notification: `Successfully removed ${blog.title} by ${blog.author}`,
-            },
-            5,
-          ),
+          setNotification({
+            notification: `Successfully removed ${blog.title} by ${blog.author}`,
+          }, 5),
         )
       }
     } catch (err) {
-      console.error(err)
       dispatch(setNotification({ error: `No nooo! ${err}` }, 5))
     }
   }
 
-  if (!blog) {
-    return null
-  }
+  if (!blog || !user) return null
   return (
     <>
       <div className={styles.blogContainer}>
@@ -85,9 +73,9 @@ const BlogView = () => {
           </Button>
           <span className={styles.dot}> &#8226;</span>
           <span className={styles.addedBy}>Added by </span>
-          <span className={styles.user}>{blog.user?.name}</span>
+          <span className={styles.user}>{blog.user.name}</span>
         </div>
-        {blog.user?.username === user?.username && (
+        {blog.user.username === user.username && (
           <Button
             onClick={() => deleteBlog(blog.id, blog)}
             className={styles.removeBtn}

@@ -1,12 +1,12 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { NavLink, useHistory } from 'react-router-dom'
 import Button from './Button'
 import { logout } from '../reducers/loginReducer'
-import { NavLink, useHistory } from 'react-router-dom'
 import styles from './Navbar.module.css'
 
 const Navbar = () => {
-  const user = useSelector((state) => state.login)
+  const user = useSelector(state => state.login)
 
   const dispatch = useDispatch()
   const history = useHistory()
@@ -25,7 +25,7 @@ const Navbar = () => {
             <NavLink
               activeClassName={styles.activeLink}
               className={styles.navLink}
-              to={`/blogs`}
+              to={'/blogs'}
             >
               blogs
             </NavLink>
@@ -34,7 +34,7 @@ const Navbar = () => {
             <NavLink
               activeClassName={styles.activeLink}
               className={styles.navLink}
-              to={`/users`}
+              to={'/users'}
             >
               users
             </NavLink>
@@ -43,7 +43,7 @@ const Navbar = () => {
 
         <ul className={`${styles.navList} ${styles.navListSecondary}`}>
           <li className={styles.navItem}>
-            <span className={styles.user}>{user?.name} logged in</span>
+            <span className={styles.user}>{user.name} logged in</span>
           </li>
           <li className={styles.navItem}>
             <Button
@@ -61,11 +61,10 @@ const Navbar = () => {
     return (
       <nav className={styles.nav}>
         <Button
-          onClick={handleLogout}
           className={styles.logoutBtn}
           type="button"
         >
-          Login
+          Hi~ there!
         </Button>
       </nav>
     )

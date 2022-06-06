@@ -5,14 +5,14 @@ import Button from './Button'
 import styles from './BlogForm.module.css'
 
 const BlogForm = ({ createBlog }) => {
-  const [inputValue, setInputValue] = useState(null)
+  const [inputValue, setInputValue] = useState({ author: '', title: '', url: '' })
 
-  const handleInputChange = (event) => {
+  const handleInputChange = event => {
     const target = event.target
     const value = target.value
     const name = target.name
 
-    setInputValue((prevValues) => {
+    setInputValue(prevValues => {
       return {
         ...prevValues,
         [name]: value,
@@ -20,18 +20,15 @@ const BlogForm = ({ createBlog }) => {
     })
   }
 
-  const handleCreateBlog = (event) => {
+  const handleCreateBlog = event => {
     event.preventDefault()
     try {
-      const title = inputValue?.title
-      const author = inputValue?.author
-      const url = inputValue?.url
-      const likes = 0
+      const { title, author, url } = inputValue
       const blog = {
         title,
         author,
         url,
-        likes,
+        likes: 0,
       }
       createBlog(blog)
       setInputValue({ author: '', title: '', url: '' })
@@ -47,7 +44,7 @@ const BlogForm = ({ createBlog }) => {
         name="title"
         label="title"
         htmlFor="title"
-        value={inputValue?.title || ''}
+        value={inputValue.title}
         onChange={handleInputChange}
       />
       <InputField
@@ -55,7 +52,7 @@ const BlogForm = ({ createBlog }) => {
         name="author"
         label="author"
         htmlFor="author"
-        value={inputValue?.author || ''}
+        value={inputValue.author}
         onChange={handleInputChange}
       />
       <InputField
@@ -63,7 +60,7 @@ const BlogForm = ({ createBlog }) => {
         name="url"
         label="url"
         htmlFor="url"
-        value={inputValue?.url || ''}
+        value={inputValue.url}
         onChange={handleInputChange}
       />
       <Button className={styles.createBtn} type="submit">

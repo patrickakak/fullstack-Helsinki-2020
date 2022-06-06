@@ -7,15 +7,14 @@ import Button from './Button'
 import styles from './CommentForm.module.css'
 
 const CommentForm = () => {
-  const [inputValue, setInputValue] = useState(null)
+  const [inputValue, setInputValue] = useState({ comment: '' })
 
   const dispatch = useDispatch()
-
-  const blogs = useSelector((state) => state.blogs)
+  const blogs = useSelector(state => state.blogs)
   const match = useRouteMatch('/blogs/:id')
-  const blog = match ? blogs?.find((blog) => blog.id === match.params.id) : null
+  const blog = match ? blogs.find(blog => blog.id === match.params.id) : null
 
-  const handleInputChange = (event) => {
+  const handleInputChange = event => {
     const target = event.target
     const value = target.value
     const name = target.name
@@ -28,20 +27,14 @@ const CommentForm = () => {
     })
   }
 
-  const addComment = async (event) => {
+  const addComment = async event => {
     event.preventDefault()
     try {
-      const title = inputValue?.comment
-
       const comment = {
-        title,
+        title: inputValue.comment,
       }
-
       const blogId = blog.id
-
       dispatch(createComment(blogId, comment))
-
-      // reset input value
       setInputValue({ comment: '' })
     } catch (err) {
       console.error(err)
@@ -55,7 +48,7 @@ const CommentForm = () => {
           htmlFor="comment"
           type="text"
           name="comment"
-          value={inputValue?.comment || ''}
+          value={inputValue.comment}
           onChange={handleInputChange}
         />
         <Button className={styles.submitBtn} type="submit">

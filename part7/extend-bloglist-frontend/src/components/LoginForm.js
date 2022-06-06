@@ -5,14 +5,14 @@ import styles from './LoginForm.module.css'
 import Button from './Button'
 
 const LoginForm = ({ handleLogin }) => {
-  const [inputValue, setInputValue] = useState(null)
+  const [inputValue, setInputValue] = useState({ username: '', password: '' })
 
-  const handleInputChange = (event) => {
+  const handleInputChange = event => {
     const target = event.target
     const value = target.value
     const name = target.name
 
-    setInputValue((prevValues) => {
+    setInputValue(prevValues => {
       return {
         ...prevValues,
         [name]: value,
@@ -20,15 +20,13 @@ const LoginForm = ({ handleLogin }) => {
     })
   }
 
-  const login = (event) => {
+  const login = event => {
     event.preventDefault()
-    const username = inputValue?.username
-    const password = inputValue?.password
+    const username = inputValue.username
+    const password = inputValue.password
 
     try {
       handleLogin(username, password)
-
-      // reset input values
       setInputValue({ username: '', password: '' })
     } catch (err) {
       console.error(err)
@@ -42,7 +40,7 @@ const LoginForm = ({ handleLogin }) => {
         type="text"
         name="username"
         htmlFor="username"
-        value={inputValue?.username || ''}
+        value={inputValue.username}
         onChange={handleInputChange}
       />
       <InputField
@@ -50,7 +48,7 @@ const LoginForm = ({ handleLogin }) => {
         type="password"
         name="password"
         htmlFor="password"
-        value={inputValue?.password || ''}
+        value={inputValue.password}
         onChange={handleInputChange}
       />
       <Button className={styles.loginBtn} type="submit">
