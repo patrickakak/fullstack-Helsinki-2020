@@ -1,9 +1,12 @@
 import loginService from '../services/login'
 
-const userReducer = (state = null, action) => {
+const initialState = JSON.parse(
+  window.localStorage.getItem('loggedBlogappUser'),
+)
+
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
   case 'LOGIN':
-    console.log('action.data:', action.data)
     return action.data
   case 'LOGOUT':
     return null
@@ -13,23 +16,6 @@ const userReducer = (state = null, action) => {
 }
 
 export const userLogin = (username, password) => {
-  // return async dispatch => {
-  //   dispatch({
-  //     type: 'SET_NOTIFICATION',
-  //     payload: {
-  //       message,
-  //       timeoutID: setTimeout(() => {
-  //         dispatch(clearNotification())
-  //       }, delay * 1000)
-  //     }
-  //   })
-  // }
-
-  // return async dispatch => {
-  //   const newBlog = await blogService.update(id, blogObject)
-  //   dispatch(setLikes(newBlog))
-  // }
-  console.log('in userLogin:', username, ', ', password)
   return async dispatch => {
     const user = await loginService.login({ username, password })
     dispatch({

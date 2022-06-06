@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Notification from './components/Notification'
@@ -7,16 +7,14 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
-import loginService from './services/login'
 import { initialiseBlogs, createBlog, updateLikes, deleteBlog, setToken } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
-// import { login } from './reducers/loginReducer'
+import { userLogin, userLogout } from './reducers/userReducer'
 
 const App = () => {
-  const [user, setUser] = useState(null)
   const blogs = useSelector(state => state.blogs)
-  const msg = useSelector(state => state.notification)
-  // const user = useSelector(state => state.user)
+  const notification = useSelector(state => state.notification)
+  const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -24,25 +22,15 @@ const App = () => {
   }, [dispatch])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      // setUser(user)
-      loginService.login(user.username, user.password)
-      setToken(user.token)
+    if (user) {
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      setToken(user?.token)
     }
-  }, [])
+  }, [user])
 
   const handleLogin = async (username, password) => {
     try {
-      const user = await loginService.login({
-        username, password,
-      })
-      setUser(user)
-      setToken(user.token)
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
+      await dispatch(userLogin(username, password))
     } catch (exception) {
       dispatch(setNotification({
         text: 'Wrong credentials',
@@ -70,7 +58,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
+    dispatch(userLogout())
   }
 
   const blogFormRef = useRef()
@@ -78,7 +66,7 @@ const App = () => {
   return (
     <div>
       {user === null ? <h2>Log in to application</h2> : <h2>blogs</h2>}
-      <Notification msg={msg} />
+      <Notification notification={notification} />
       {user === null && <LoginForm handleLogin={handleLogin} />}
       {user !== null &&
         <>

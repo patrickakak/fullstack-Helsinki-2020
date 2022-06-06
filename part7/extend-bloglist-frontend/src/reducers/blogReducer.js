@@ -26,15 +26,15 @@ const blogSlice = createSlice({
 
 export const initialiseBlogs = () => {
   return async dispatch => {
-    const notes = await blogService.getAll()
-    dispatch(setBlogs(notes))
+    const blogs = await blogService.getAll()
+    dispatch(setBlogs(blogs))
   }
 }
 
 export const createBlog = content => {
   return async dispatch => {
-    const newNote = await blogService.create(content)
-    dispatch(appendBlog(newNote))
+    const newBlog = await blogService.create(content)
+    dispatch(appendBlog(newBlog))
   }
 }
 
