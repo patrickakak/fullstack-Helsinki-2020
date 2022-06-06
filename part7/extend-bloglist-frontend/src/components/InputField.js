@@ -4,7 +4,6 @@ import styles from './InputField.module.css'
 
 const InputField = ({ htmlFor, label, type, value, onChange, name }) => (
   <div className={styles.container}>
-    {/* Add label with htmlFor for accessibility, id on input associates label with input element */}
     <label className={styles.label} htmlFor={htmlFor}>
       {label}
     </label>

@@ -11,15 +11,11 @@ commentsRouter.get('/:id/comments', async (request, response) => {
 
 commentsRouter.post('/:id/comments', async (request, response) => {
   const { body } = request
-
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
-  // check for valid token
   if (!request.token || !decodedToken || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
-
-  //   const user = await User.findById(decodedToken.id)
 
   const { id } = request.params
 
@@ -32,11 +28,8 @@ commentsRouter.post('/:id/comments', async (request, response) => {
   const savedComment = await comment.save()
   blog.comments = blog.comments.concat(savedComment._id)
   await blog.save()
-  //   user.blogs = user.blogs.concat(savedBlog._id)
-  //   await user.save()
 
   response.status(201).json(savedComment.toJSON())
-  //   response.status(201).json(savedBlog.toJSON())
 })
 
 module.exports = commentsRouter

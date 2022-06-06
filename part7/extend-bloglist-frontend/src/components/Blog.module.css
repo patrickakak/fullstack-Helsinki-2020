@@ -67,11 +67,9 @@
 }
 
 .blog:hover {
-  background: linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(22, 211, 216, 1) 100%
-  );
+  background: linear-gradient(45deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(22, 211, 216, 1) 100%);
 }
 
 .link {

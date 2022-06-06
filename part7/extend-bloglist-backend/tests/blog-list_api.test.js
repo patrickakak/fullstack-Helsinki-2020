@@ -319,25 +319,6 @@ describe('addition of new comment', () => {
 
     expect(updatedBlog.comments[0].title).toBe('Comment')
   })
-  // test('if like property is misssing from req, it will default to value 0', async () => {
-  //   const newBlog = {
-  //     title: 'Another blog',
-  //     author: 'Jane Doe',
-  //     url: 'http://dummyurl.com',
-  //   }
-
-  //   await api
-  //     .post('/api/blogs')
-  //     .set('Authorization', `Bearer ${token}`)
-  //     .send(newBlog)
-  //     .expect(201)
-  //     .expect('Content-Type', /application\/json/)
-
-  //   const blogsAtEnd = await helper.blogsInDb()
-  //   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
-
-  //   expect(blogsAtEnd[helper.initialBlogs.length].likes).toBe(0)
-  // })
 
   test('blog without title is not added', async () => {
     const blogsAtStart = await Blog.find({}).populate('comments')
