@@ -2,36 +2,36 @@ import blogService from '../services/blogs'
 
 const blogReducer = (state = [], action) => {
   switch (action.type) {
-    case 'INIT_BLOGS':
-      return action.data
-    case 'NEW_BLOG':
-      return [...state, action.data]
-    case 'LIKE_BLOG': {
-      const { id } = action.data
-      const likedBlog = state.find((blog) => blog.id === id)
-      const updatedBlog = {
-        ...likedBlog,
-        likes: likedBlog.likes + 1,
-      }
-      return state.map((blog) => (blog.id !== id ? blog : updatedBlog))
+  case 'INIT_BLOGS':
+    return action.data
+  case 'NEW_BLOG':
+    return [...state, action.data]
+  case 'LIKE_BLOG': {
+    const { id } = action.data
+    const likedBlog = state.find(blog => blog.id === id)
+    const updatedBlog = {
+      ...likedBlog,
+      likes: likedBlog.likes + 1,
     }
-    case 'DELETE_BLOG': {
-      const { id } = action.data
-      return state.filter((blog) => blog.id !== id)
-    }
-    case 'NEW_COMMENT': {
-      const { id, postId, title } = action.data
-      const blog = state.find(blog => blog.id === postId)
-      const newComment = { title, id }
+    return state.map(blog => blog.id !== id ? blog : updatedBlog)
+  }
+  case 'DELETE_BLOG': {
+    const { id } = action.data
+    return state.filter(blog => blog.id !== id)
+  }
+  case 'NEW_COMMENT': {
+    const { id, postId, title } = action.data
+    const blog = state.find(blog => blog.id === postId)
+    const newComment = { title, id }
 
-      const updatedBlog = {
-        ...blog,
-        comments: [...blog.comments, newComment],
-      }
-      return state.map((blog) => (blog.id !== postId ? blog : updatedBlog))
+    const updatedBlog = {
+      ...blog,
+      comments: [...blog.comments, newComment],
     }
-    default:
-      return state
+    return state.map(blog => blog.id !== postId ? blog : updatedBlog)
+  }
+  default:
+    return state
   }
 }
 
@@ -66,7 +66,7 @@ export const likeBlog = (id, likedBlog) => {
   }
 }
 
-export const removeBlog = (id) => {
+export const removeBlog = id => {
   return async dispatch => {
     await blogService.deleteBlog(id)
     dispatch({

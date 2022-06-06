@@ -27,17 +27,13 @@ const BlogForm = ({ createBlog }) => {
       const author = inputValue?.author
       const url = inputValue?.url
       const likes = 0
-
       const blog = {
         title,
         author,
         url,
         likes,
       }
-
       createBlog(blog)
-
-      // reset input values
       setInputValue({ author: '', title: '', url: '' })
     } catch (err) {
       console.error(err)

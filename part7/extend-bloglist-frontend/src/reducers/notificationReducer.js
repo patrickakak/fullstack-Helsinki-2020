@@ -2,10 +2,9 @@ const initialState = { notification: null }
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
-  case 'SET_MESSAGE': {
+  case 'SET_MESSAGE':
     clearTimeout(state.delay)
     return action.data.message
-  }
   case 'REMOVE_MESSAGE':
     return initialState
   default:
@@ -14,7 +13,7 @@ const notificationReducer = (state = initialState, action) => {
 }
 
 export const setNotification = (message, delay) => {
-  return async (dispatch) => {
+  return async dispatch => {
     dispatch({
       type: 'SET_MESSAGE',
       data: {

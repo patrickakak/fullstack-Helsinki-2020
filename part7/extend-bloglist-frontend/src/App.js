@@ -20,7 +20,7 @@ const App = () => {
     dispatch(initialiseUsers())
   }, [dispatch])
 
-  const user = useSelector((state) => state.login)
+  const user = useSelector(state => state.login)
 
   useEffect(() => {
     if (user) {
