@@ -12,7 +12,6 @@ const LoginPage = () => {
 
   const handleLogin = async (username, password) => {
     if (!username || username === '' || !password || password === '') {
-      console.log('something went wrong')
       dispatch(
         setNotification({ error: 'Please fill in username and password' }, 5),
       )
@@ -21,29 +20,19 @@ const LoginPage = () => {
 
     try {
       await dispatch(login(username, password))
-
       history.push('/')
 
-      // set notification message
       dispatch(
-        setNotification(
-          {
-            notification: `${username} succesfully logged in`,
-          },
-          5,
-        ),
+        setNotification({
+          notification: `${username} succesfully logged in`,
+        }, 5),
       )
     } catch (err) {
-      // set error message
       dispatch(
-        setNotification(
-          {
-            error: 'wrong username or password',
-          },
-          5,
-        ),
+        setNotification({
+          error: 'wrong username or password',
+        }, 5),
       )
-      console.error(err)
     }
   }
   return (

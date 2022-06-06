@@ -7,7 +7,6 @@ import styles from './Navbar.module.css'
 
 const Navbar = () => {
   const user = useSelector(state => state.login)
-
   const dispatch = useDispatch()
   const history = useHistory()
 
