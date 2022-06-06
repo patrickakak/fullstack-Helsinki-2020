@@ -12,11 +12,11 @@ import { setNotification } from './reducers/notificationReducer'
 import { userLogin, userLogout } from './reducers/userReducer'
 
 const App = () => {
+  const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
   const user = useSelector(state => state.user)
 
-  const dispatch = useDispatch()
   useEffect(() => {
     dispatch(initialiseBlogs())
   }, [dispatch])
@@ -39,7 +39,7 @@ const App = () => {
     }
   }
 
-  const addBlog = (blogObject) => {
+  const addBlog = blogObject => {
     blogFormRef.current.toggleVisibility()
     dispatch(createBlog(blogObject))
     dispatch(setNotification({
