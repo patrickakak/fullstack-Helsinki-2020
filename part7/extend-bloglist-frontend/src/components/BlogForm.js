@@ -1,61 +1,84 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import InputField from './InputField'
+import Button from './Button'
+import styles from './BlogForm.module.css'
 
 const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [inputValue, setInputValue] = useState(null)
 
-  const addBlog = (event) => {
-    event.preventDefault()
-    createBlog({
-      title,
-      author,
-      url,
+  const handleInputChange = (event) => {
+    const target = event.target
+    const value = target.value
+    const name = target.name
+
+    setInputValue((prevValues) => {
+      return {
+        ...prevValues,
+        [name]: value,
+      }
     })
+  }
 
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+  const handleCreateBlog = (event) => {
+    event.preventDefault()
+    try {
+      const title = inputValue?.title
+      const author = inputValue?.author
+      const url = inputValue?.url
+      const likes = 0
+
+      const blog = {
+        title,
+        author,
+        url,
+        likes,
+      }
+
+      createBlog(blog)
+
+      // reset input values
+      setInputValue({ author: '', title: '', url: '' })
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (
-    <div>
-      <h2>create new</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title:
-          <input
-            type='text'
-            value={title}
-            name='title'
-            placeholder='title'
-            onChange={event => setTitle(event.target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type='text'
-            value={author}
-            name='author'
-            placeholder='author'
-            onChange={event => setAuthor(event.target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type='text'
-            value={url}
-            name='url'
-            placeholder='url'
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type='submit'>create</button>
-      </form>
-    </div>
+    <form onSubmit={handleCreateBlog}>
+      <InputField
+        type="text"
+        name="title"
+        label="title"
+        htmlFor="title"
+        value={inputValue?.title || ''}
+        onChange={handleInputChange}
+      />
+      <InputField
+        type="text"
+        name="author"
+        label="author"
+        htmlFor="author"
+        value={inputValue?.author || ''}
+        onChange={handleInputChange}
+      />
+      <InputField
+        type="text"
+        name="url"
+        label="url"
+        htmlFor="url"
+        value={inputValue?.url || ''}
+        onChange={handleInputChange}
+      />
+      <Button className={styles.createBtn} type="submit">
+        Create
+      </Button>
+    </form>
   )
 }
 
 export default BlogForm
+
+BlogForm.propTypes = {
+  createBlog: PropTypes.func.isRequired,
+}

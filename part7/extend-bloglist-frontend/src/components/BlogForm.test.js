@@ -1,30 +1,31 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import BlogForm from './BlogForm'
 
-test('<BlogForm />', () => {
+test('<BlogForm /> updates parent state and calls onSubmit', () => {
   const addBlog = jest.fn()
-  const { container } = render(<BlogForm createBlog={addBlog} />)
 
-  const inputTitle = screen.getByPlaceholderText('title')
-  const inputAuthor = screen.getByPlaceholderText('author')
-  const inputUrl = screen.getByPlaceholderText('url')
-  const form = container.querySelector('form')
+  const component = render(<BlogForm createBlog={addBlog} />)
+
+  const inputTitle = component.getByLabelText('title')
+  const inputAuthor = component.getByLabelText('author')
+  const inputUrl = component.getByLabelText('url')
+  const form = component.container.querySelector('form')
 
   fireEvent.change(inputTitle, {
-    target: { value: 'blog title' },
+    target: { value: 'Blog Title' },
   })
   fireEvent.change(inputAuthor, {
-    target: { value: 'blog author' },
+    target: { value: 'Author' },
   })
   fireEvent.change(inputUrl, {
-    target: { value: 'https://blog-url.com' },
+    target: { value: 'http://blog-title.com' },
   })
   fireEvent.submit(form)
 
   expect(addBlog.mock.calls).toHaveLength(1)
-  expect(addBlog.mock.calls[0][0].title).toBe('blog title')
-  expect(addBlog.mock.calls[0][0].author).toBe('blog author')
-  expect(addBlog.mock.calls[0][0].url).toBe('https://blog-url.com')
+  expect(addBlog.mock.calls[0][0].title).toBe('Blog Title')
+  expect(addBlog.mock.calls[0][0].author).toBe('Author')
+  expect(addBlog.mock.calls[0][0].url).toBe('http://blog-title.com')
 })

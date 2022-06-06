@@ -1,44 +1,67 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import InputField from './InputField'
+import styles from './LoginForm.module.css'
+import Button from './Button'
 
 const LoginForm = ({ handleLogin }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [inputValue, setInputValue] = useState(null)
+
+  const handleInputChange = (event) => {
+    const target = event.target
+    const value = target.value
+    const name = target.name
+
+    setInputValue((prevValues) => {
+      return {
+        ...prevValues,
+        [name]: value,
+      }
+    })
+  }
 
   const login = (event) => {
     event.preventDefault()
-    handleLogin(username, password)
-    setUsername('')
-    setPassword('')
+    const username = inputValue?.username
+    const password = inputValue?.password
+
+    try {
+      handleLogin(username, password)
+
+      // reset input values
+      setInputValue({ username: '', password: '' })
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (
     <form onSubmit={login}>
-      <div>
-        username
-        <input
-          type='text'
-          value={username}
-          name='username'
-          onChange={event => setUsername(event.target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type='password'
-          value={password}
-          name='password'
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type='submit'>login</button>
+      <InputField
+        label="Username"
+        type="text"
+        name="username"
+        htmlFor="username"
+        value={inputValue?.username || ''}
+        onChange={handleInputChange}
+      />
+      <InputField
+        label="Password"
+        type="password"
+        name="password"
+        htmlFor="password"
+        value={inputValue?.password || ''}
+        onChange={handleInputChange}
+      />
+      <Button className={styles.loginBtn} type="submit">
+        Login
+      </Button>
     </form>
   )
 }
 
+export default LoginForm
+
 LoginForm.propTypes = {
   handleLogin: PropTypes.func.isRequired,
 }
-
-export default LoginForm
