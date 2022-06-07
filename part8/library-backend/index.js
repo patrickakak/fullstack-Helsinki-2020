@@ -84,26 +84,25 @@ let books = [
 ]
 
 const typeDefs = gql`
+  type Books {
+    title: String!
+    author: String!
+    published: Int!
+    genres: [String!]!
+  }
+
   type Query {
     bookCount: Int!
     authorCount: Int!
+    allBooks: [Books!]!
   }
 `
 
 const resolvers = {
   Query: {
     bookCount: () => books.length,
-    authorCount: () => {
-      let count = 0
-      let authorSet = new Set()
-      for (const book of books) {
-        if (!authorSet.has(book.author)) {
-          count += 1
-        }
-        authorSet.add(book.author)
-      }
-      return count
-    }
+    authorCount: () => authors.length,
+    allBooks: () => books
   }
 }
 
