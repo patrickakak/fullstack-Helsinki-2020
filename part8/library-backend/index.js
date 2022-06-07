@@ -84,6 +84,11 @@ let books = [
 ]
 
 const typeDefs = gql`
+  type Author {
+    name: String!
+    bookCount: Int!
+  }
+
   type Books {
     title: String!
     author: String!
@@ -95,6 +100,7 @@ const typeDefs = gql`
     bookCount: Int!
     authorCount: Int!
     allBooks: [Books!]!
+    allAuthors: [Author!]!
   }
 `
 
@@ -102,7 +108,22 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: () => books
+    allBooks: () => books,
+    allAuthors: () => {
+      const authorMap = new Map()
+      for (const book of books) {
+        if (!authorMap.has(book.author)) {
+          authorMap.set(book.author, 1)
+        } else {
+          authorMap.set(book.author, 1 + authorMap.get(book.author))
+        }
+      }
+      const authors = []
+      for (const [key, value] of authorMap.entries()) {
+        authors.push({ name: key, bookCount: value })
+      }
+      return authors
+    }
   }
 }
 
