@@ -1,4 +1,5 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, gql } = require('apollo-server')
+const { v1: uuid } = require('uuid')
 
 let authors = [
   {
@@ -86,10 +87,11 @@ let books = [
 const typeDefs = gql`
   type Author {
     name: String!
+    born: Int
     bookCount: Int!
   }
 
-  type Books {
+  type Book {
     title: String!
     author: String!
     published: Int!
@@ -99,8 +101,17 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String, genre: String): [Books!]!
+    allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book
   }
 `
 
@@ -122,20 +133,37 @@ const resolvers = {
       return retBooks
     },
     allAuthors: () => {
-      const counter = new Map()
+      const counterMap = new Map()
       for (const book of books) {
-        if (!counter.has(book.author)) {
-          counter.set(book.author, 1)
+        if (!counterMap.has(book.author)) {
+          counterMap.set(book.author, 1)
         } else {
-          counter.set(book.author, 1 + counter.get(book.author))
+          counterMap.set(book.author, 1 + counterMap.get(book.author))
         }
       }
-      const authors = []
-      for (const [key, value] of counter.entries()) {
-        authors.push({ name: key, bookCount: value })
+      const bornyearMap = new Map()
+      for (const author of authors) {
+        bornyearMap.set(author.name, author.born)
       }
-      return authors
+      const retAuthors = []
+      for (const [name, bookCount] of counterMap.entries()) {
+        retAuthors.push({ name, born: bornyearMap.get(name), bookCount, })
+      }
+      return retAuthors
     }
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      if (books.find(b => b.title === args.title)) {
+        throw new UserInputError('Book title must be unique', {
+          invalidArgs: args.title,
+        })
+      }
+
+      const book = { ...args, id: uuid() }
+      books = books.concat(book)
+      return book
+    },
   }
 }
 
