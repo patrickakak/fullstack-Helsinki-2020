@@ -9,7 +9,7 @@ const Books = ({ show, genre, setGenre, getBooks, result }) => {
 
   useEffect(() => {
     getBooks()
-  }, [getBooks])
+  }, []) // eslint-disable-line
 
   let genres = data?.allBooks?.flatMap(book => book.genres)
   genres = [...new Set(genres)]
