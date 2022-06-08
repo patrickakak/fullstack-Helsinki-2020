@@ -56,11 +56,11 @@ const App = () => {
     client.resetStore()
   }
 
-  const notify = (message) => {
+  const notify = message => {
     setErrorMessage(message)
     setTimeout(() => {
       setErrorMessage(null)
-    }, 10000)
+    }, 5000)
   }
 
   return (
