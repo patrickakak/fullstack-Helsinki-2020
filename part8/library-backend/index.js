@@ -9,25 +9,23 @@ const User = require('./models/user')
 const { typeDefs } = require('./typeDefs')
 const { resolvers } = require('./resolvers')
 
-const url = process.env.MONGO_URI
+const MONGODB_URI = process.env.MONGO_URI
 const JWT_SECRET = process.env.SECRET
 
-const batchAuthors = async (keys) => {
+const batchAuthors = async keys => {
   const authors = await Author.find({
     _id: {
       $in: keys,
-    },
+    }
   })
 
-  return keys.map(
-    (key) =>
-      authors.find((author) => author.id == key) ||
-      new Error(`No result for ${key}`)
+  return keys.map(key =>
+    authors.find(author => author.id == key) || new Error(`No result for ${key}`)
   )
 }
 
 mongoose
-  .connect(url, {
+  .connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -36,7 +34,7 @@ mongoose
   .then(() => {
     console.log('connected to db')
   })
-  .catch((err) => {
+  .catch(err => {
     console.log('Error connecting to db', err.message)
   })
 
@@ -51,16 +49,16 @@ const server = new ApolloServer({
       return {
         currentUser,
         loaders: {
-          author: new DataLoader((keys) => batchAuthors(keys)),
-        },
+          author: new DataLoader(keys => batchAuthors(keys)),
+        }
       }
     }
     return {
       loaders: {
-        author: new DataLoader((keys) => batchAuthors(keys)),
-      },
+        author: new DataLoader(keys => batchAuthors(keys)),
+      }
     }
-  },
+  }
 })
 
 server.listen().then(({ url, subscriptionsUrl }) => {

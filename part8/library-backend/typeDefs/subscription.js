@@ -7,5 +7,5 @@ const subscription = gql`
 `
 
 module.exports = {
-  subscription,
+  subscription
 }

@@ -11,5 +11,5 @@ const query = gql`
 `
 
 module.exports = {
-  query,
+  query
 }

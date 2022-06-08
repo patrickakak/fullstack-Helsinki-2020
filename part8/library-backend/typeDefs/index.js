@@ -9,9 +9,9 @@ const typeDefs = [
   subscription,
   bookType,
   userType,
-  authorType,
+  authorType
 ]
 
 module.exports = {
-  typeDefs,
+  typeDefs
 }

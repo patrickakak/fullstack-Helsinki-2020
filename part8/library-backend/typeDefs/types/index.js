@@ -5,5 +5,5 @@ const { authorType } = require('./authorType')
 module.exports = {
   bookType,
   userType,
-  authorType,
+  authorType
 }

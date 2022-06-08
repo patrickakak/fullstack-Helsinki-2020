@@ -23,37 +23,24 @@ const resolvers = {
     allBooks: async (root, args) => {
       if (args.author && args.genre) {
         const author = await Author.findOne({ name: args.author })
-
-        const books = await Book.find({
+        return Book.find({
           $and: [
             { author: { $in: author.id } },
             { genres: { $in: args.genre } },
           ],
         }).populate('author')
-
-        return books
       } else if (args.author) {
         const author = await Author.findOne({ name: args.author })
-
-        const books = await Book.find({ author: { $in: author.id } }).populate(
-          'author'
-        )
-
-        return books
+        return Book.find({ author: { $in: author.id } }).populate('author')
       } else if (args.genre) {
-        const books = await Book.find({ genres: { $in: args.genre } }).populate(
-          'author'
-        )
-
-        return books
+        return Book.find({ genres: { $in: args.genre } }).populate('author')
       } else {
         return Book.find({}).populate('author')
       }
     },
     allAuthors: async () => {
       const authors = await Author.find({})
-
-      const authorsObject = authors.map((author) => {
+      const retAuthors = authors.map((author) => {
         return {
           name: author.name,
           born: author.born,
@@ -61,16 +48,13 @@ const resolvers = {
           id: author.id,
         }
       })
-
-      return authorsObject
+      return retAuthors
     },
   },
   Book: {
     author: async (root, args, { loaders }) => {
       const id = root.author
-
       const author = await loaders.author.load(root.author._id)
-
       return {
         name: author.name,
         born: author.born,
@@ -108,7 +92,6 @@ const resolvers = {
     addBook: async (root, args, context) => {
       let book
       try {
-        // Check if book author is already in db:
         let author = await Author.findOne({ name: args.author })
 
         const currentUser = context.currentUser
@@ -169,13 +152,13 @@ const resolvers = {
         })
       }
       return author
-    },
+    }
   },
   Subscription: {
     bookAdded: {
       subscribe: () => pubsub.asyncIterator(['BOOK_ADDED']),
-    },
-  },
+    }
+  }
 }
 
 module.exports = {

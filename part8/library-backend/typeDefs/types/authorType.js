@@ -10,5 +10,5 @@ const authorType = gql`
 `
 
 module.exports = {
-  authorType,
+  authorType
 }

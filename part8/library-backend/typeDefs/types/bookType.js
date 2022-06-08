@@ -11,5 +11,5 @@ const bookType = gql`
 `
 
 module.exports = {
-  bookType,
+  bookType
 }
