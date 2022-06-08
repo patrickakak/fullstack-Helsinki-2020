@@ -1,42 +1,47 @@
+import React from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_AUTHORS } from '../queries'
 import SetBirthYear from './SetBirthYear'
+import styles from './Authors.module.css'
 
-const Authors = (props) => {
-  const result = useQuery(ALL_AUTHORS)
+const Authors = ({ token, show }) => {
+  const { loading, error, data } = useQuery(ALL_AUTHORS)
 
-  if (!props.show) return null
-  if (result.loading) return <div>loading...</div>
-
-  const authors = result.data.allAuthors
-  const options = authors.map(author => {
+  const options = data?.allAuthors?.map((option) => {
     return {
-      value: author.name.toLowerCase(),
-      label: author.name,
+      value: option.name.toLowerCase(),
+      label: option.name,
     }
   })
 
+  if (!show) {
+    return null
+  }
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error :(</p>
+
   return (
     <div>
-      <h2>authors</h2>
+      <h1 className={styles.header}>Authors</h1>
+
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th className={styles.name}>name</th>
             <th>born</th>
             <th>books</th>
           </tr>
-          {authors.map((a) => (
+          {data?.allAuthors?.map((a) => (
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
-              <td>{a.bookCount}</td>
+              <td className={styles.bookCount}>{a.bookCount}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <SetBirthYear options={options} />
+      {token && <SetBirthYear options={options} />}
     </div>
   )
 }

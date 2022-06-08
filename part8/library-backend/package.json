@@ -1,21 +1,30 @@
 {
-  "name": "library-end",
+  "name": "library-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "GraphQL backend for small library",
+  "main": "library-backend.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "woozway",
+  "keywords": [
+    "GraphQL",
+    "node"
+  ],
+  "author": "l0ve2cr3ate",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^3.8.2",
-    "graphql": "^16.5.0",
-    "uuid": "^8.3.2"
+    "apollo-server": "^2.14.1",
+    "dataloader": "^2.0.0",
+    "dotenv": "^8.2.0",
+    "graphql": "^15.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.17",
+    "mongoose-unique-validator": "^2.0.3",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.4"
   }
 }

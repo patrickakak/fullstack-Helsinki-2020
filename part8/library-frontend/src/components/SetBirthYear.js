@@ -1,21 +1,24 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import Select from 'react-select'
+import { UPDATE_AUTHOR, ALL_AUTHORS } from '../queries'
+import styles from './SetBirthYear.module.css'
+import Button from './Button'
+import Input from './Input'
 
-import { ALL_AUTHORS, EDIT_BIRTHYEAR } from '../queries'
-
-const SetBirthYear = (props) => {
+const SetBirthYear = ({ options }) => {
   const [name, setName] = useState('')
-  const [setBornTo, setBorn] = useState('')
+  let [setBornTo, setBorn] = useState('')
 
-  const [changeAuthor] = useMutation(EDIT_BIRTHYEAR, {
+  const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
   })
 
   const submit = async (event) => {
     event.preventDefault()
 
-    changeAuthor({ variables: { name, setBornTo } })
+    setBornTo = Number(setBornTo)
+    updateAuthor({ variables: { name, setBornTo } })
 
     setName('')
     setBorn('')
@@ -23,23 +26,27 @@ const SetBirthYear = (props) => {
 
   return (
     <div>
-      <h3>Set birth year</h3>
-      <form onSubmit={submit}>
+      <h2 className={styles.header}>Set birth year</h2>
+      <form className={styles.form} onSubmit={submit}>
         <Select
-          placeholder="Select author..."
-          options={props.options}
+          placeholder='Select author...'
+          className={styles.select}
+          options={options}
           onChange={({ label }) => setName(label)}
           value={name ? { label: name, value: name?.toLowerCase() } : null}
         />
-        <div>
-          born
-          <input
-            type="number"
+        <div className={styles.inputContainer}>
+          <label className={styles.label} htmlFor='born'>
+            Born
+          </label>
+          <Input
+            id='born'
+            type='number'
             value={setBornTo}
-            onChange={({ target }) => setBorn(Number(target.value))}
+            onChange={({ target }) => setBorn(target.value)}
           />
         </div>
-        <button type="submit">update author</button>
+        <Button type='submit'>Update author</Button>
       </form>
     </div>
   )
