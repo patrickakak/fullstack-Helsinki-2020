@@ -1,23 +1,20 @@
-const mongoose = require('mongoose')
-const Book = require('../models/books')
-const Author = require('../models/authors')
-const User = require('../models/user')
 const {
   UserInputError,
   AuthenticationError,
   PubSub,
 } = require('apollo-server')
-
+const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
+
+const Book = require('../models/books')
+const Author = require('../models/authors')
+const User = require('../models/user')
 
 const pubsub = new PubSub()
 const JWT_SECRET = process.env.SECRET
 
 const resolvers = {
   Query: {
-    me: (root, args, context) => {
-      return context.currentUser
-    },
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
@@ -50,6 +47,9 @@ const resolvers = {
       })
       return retAuthors
     },
+    me: (root, args, context) => {
+      return context.currentUser
+    }
   },
   Book: {
     author: async (root, args, { loaders }) => {
@@ -92,23 +92,16 @@ const resolvers = {
     addBook: async (root, args, context) => {
       let book
       try {
-        let author = await Author.findOne({ name: args.author })
-
         const currentUser = context.currentUser
+        if (!currentUser) throw new AuthenticationError('not authenticated')
 
-        if (!currentUser) {
-          throw new AuthenticationError('not authenticated')
-        }
-
+        let author = await Author.findOne({ name: args.author })
         if (author) {
           book = new Book({ ...args, author: author._id })
           author.books = author.books.concat(book._id)
-
           await book.save()
           await author.save()
-        }
-
-        if (!author) {
+        } else {
           const _id = mongoose.Types.ObjectId()
           book = new Book({ ...args, author: _id })
 
@@ -119,7 +112,6 @@ const resolvers = {
             _id,
             books: [book._id],
           })
-
           await author.save()
           await book.save()
         }
@@ -130,16 +122,13 @@ const resolvers = {
       }
 
       pubsub.publish('BOOK_ADDED', { bookAdded: book })
-
       return book
     },
     editAuthor: async (root, args, context) => {
       const author = await Author.findOne({ name: args.name })
       const currentUser = context.currentUser
 
-      if (!currentUser) {
-        throw new AuthenticationError('not authenticated')
-      }
+      if (!currentUser) throw new AuthenticationError('not authenticated')
       if (!author) return null
 
       author.born = args.setBornTo
@@ -162,5 +151,5 @@ const resolvers = {
 }
 
 module.exports = {
-  resolvers,
+  resolvers
 }
