@@ -25,7 +25,7 @@ const LoginForm = ({ setPage, setToken, show, setError, errorMessage }) => {
       setToken(token)
       localStorage.setItem('user-token', token)
     }
-  }, [result.data])
+  }, [result.data, setToken])
 
   const submit = async (event) => {
     event.preventDefault()
