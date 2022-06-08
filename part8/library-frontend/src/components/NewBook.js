@@ -17,7 +17,7 @@ const NewBook = ({
 }) => {
   const [title, setTitle] = useState('')
   const [author, setAuhtor] = useState('')
-  let [published, setPublished] = useState('')
+  const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
@@ -43,7 +43,6 @@ const NewBook = ({
   const submit = async (event) => {
     event.preventDefault()
 
-    published = Number(published)
     createBook({ variables: { title, author, published, genres } })
 
     setTitle('')
@@ -84,7 +83,7 @@ const NewBook = ({
             id='published'
             type='number'
             value={published}
-            onChange={({ target }) => setPublished(target.value)}
+            onChange={({ target }) => setPublished(Number(target.value))}
           />
         </div>
         <div className={styles.inputContainer}>

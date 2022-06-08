@@ -8,7 +8,7 @@ import Input from './Input'
 
 const SetBirthYear = ({ options }) => {
   const [name, setName] = useState('')
-  let [setBornTo, setBorn] = useState('')
+  const [setBornTo, setBorn] = useState('')
 
   const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
@@ -17,7 +17,6 @@ const SetBirthYear = ({ options }) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    setBornTo = Number(setBornTo)
     updateAuthor({ variables: { name, setBornTo } })
 
     setName('')
@@ -43,7 +42,7 @@ const SetBirthYear = ({ options }) => {
             id='born'
             type='number'
             value={setBornTo}
-            onChange={({ target }) => setBorn(target.value)}
+            onChange={({ target }) => setBorn(Number(target.value))}
           />
         </div>
         <Button type='submit'>Update author</Button>

@@ -16,7 +16,7 @@ const LoginForm = ({ setPage, setToken, show, setError, errorMessage }) => {
     },
     onCompleted: () => {
       setPage('authors')
-    },
+    }
   })
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const LoginForm = ({ setPage, setToken, show, setError, errorMessage }) => {
       setToken(token)
       localStorage.setItem('user-token', token)
     }
-  }, [result.data]) // eslint-disable-line
+  }, [result.data])
 
   const submit = async (event) => {
     event.preventDefault()
@@ -36,9 +36,7 @@ const LoginForm = ({ setPage, setToken, show, setError, errorMessage }) => {
     setPassword('')
   }
 
-  if (!show) {
-    return null
-  }
+  if (!show) return null
 
   return (
     <div>

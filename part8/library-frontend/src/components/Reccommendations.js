@@ -13,10 +13,7 @@ const Recommendations = (props) => {
     fetchPolicy: 'no-cache',
   })
 
-  if (!props.show) {
-    return null
-  }
-
+  if (!props.show) return null
   if (loading || me_loading) return <p>Loading...</p>
   if (error || me_error) return <p>Error :(</p>
 

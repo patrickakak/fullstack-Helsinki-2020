@@ -9,10 +9,9 @@ const Books = ({ show, genre, setGenre, getBooks, result }) => {
 
   useEffect(() => {
     getBooks()
-  }, []) // eslint-disable-line
+  }, [])
 
-  let genres = data?.allBooks?.flatMap((book) => book.genres)
-  // remove duplicates
+  let genres = data?.allBooks?.flatMap(book => book.genres)
   genres = [...new Set(genres)]
 
   const options = genres?.map((option) => {
@@ -35,10 +34,7 @@ const Books = ({ show, genre, setGenre, getBooks, result }) => {
     })
   }
 
-  if (!show) {
-    return null
-  }
-
+  if (!show) return null
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error :(</p>
 
