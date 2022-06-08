@@ -14,9 +14,7 @@ const Authors = ({ token, show }) => {
     }
   })
 
-  if (!show) {
-    return null
-  }
+  if (!show) return null
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error :(</p>
 
