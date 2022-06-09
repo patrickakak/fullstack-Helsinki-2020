@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useApolloClient, useSubscription, useLazyQuery } from '@apollo/client'
-
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
-import styles from './App.module.css'
 import Button from './components/Button'
 import Recommendations from './components/Reccommendations'
 import { BOOK_ADDED, ALL_BOOKS } from './queries'
+import styles from './App.module.css'
 
 const App = () => {
   const [page, setPage] = useState('authors')
