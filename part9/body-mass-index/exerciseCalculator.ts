@@ -6,8 +6,8 @@ interface InputValues {
 const parseArguments = (args: Array<string>): InputValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
 
-  for (let i = 2; i < args.length; i++) {
-    if (isNaN(Number(args[i]))) {
+  for (let arg of args.slice(2)) {
+    if (isNaN(Number(arg))) {
       throw new Error('Provided values were not numbers!');
     }
   }
