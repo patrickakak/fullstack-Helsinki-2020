@@ -43,6 +43,7 @@ app.post("/exercises", (req, res) => {
       error: "malformatted parameters"
     });
   }
+  
   const response = calculateExercises((exerciseHours as []).map(Number), Number(target));
   return res.json(response);
 });
