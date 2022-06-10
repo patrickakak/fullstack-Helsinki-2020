@@ -6,17 +6,17 @@ interface InputValues {
 const parseArguments = (args: Array<string>): InputValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
 
-  for (let arg of args.slice(2)) {
+  for (const arg of args.slice(2)) {
     if (isNaN(Number(arg))) {
       throw new Error('Provided values were not numbers!');
     }
   }
-  const [targetStr, ...rest] = args.slice(2)
+  const [targetStr, ...rest] = args.slice(2);
   return {
     target: Number(targetStr),
     exerciseHours: rest.map(Number)
-  }
-}
+  };
+};
 
 interface ExerciseHourResult {
   periodLength: number;
@@ -71,5 +71,3 @@ try {
   }
   console.log(errorMessage);
 }
-
-export default calculateExercises;
