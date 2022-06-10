@@ -1,6 +1,5 @@
 import express from 'express';
 import calculateBmi from "./bmiCalculator";
-// import calculateExercises from "./exerciseCalculator";
 
 const app = express();
 
