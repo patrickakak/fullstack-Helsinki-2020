@@ -42,8 +42,8 @@ app.post("/exercises", (req, res) => {
     });
   }
 
-  const response = calculateExercises((exerciseHours as []).map(Number), Number(target));
-  return res.json(response);
+  const reply = calculateExercises((exerciseHours as []).map(Number), Number(target));
+  return res.json(reply);
 });
 
 const PORT = 3003;
