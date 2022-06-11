@@ -32,18 +32,16 @@ app.post("/exercises", (req, res) => {
     });
   }
 
-  const isArray: boolean = Array.isArray(exerciseHours);
-  const notValidDailyExerciseParams: boolean = isArray
+  const notValidDailyExerciseParams: boolean = Array.isArray(exerciseHours)
     ? (exerciseHours as []).some((exercise: number) => isNaN(Number(exercise)))
     : true;
 
-  const validParameters: boolean = !notValidDailyExerciseParams && !isNaN(Number(target));
-  if (!validParameters) {
+  if (notValidDailyExerciseParams || isNaN(Number(target))) {
     return res.json({
       error: "malformatted parameters"
     });
   }
-  
+
   const response = calculateExercises((exerciseHours as []).map(Number), Number(target));
   return res.json(response);
 });
