@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Grid, Button } from "@material-ui/core";
+import React from "react";
+import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { TextField, SelectField, GenderOption } from "./FormField";
@@ -22,7 +22,7 @@ const genderOptions: GenderOption[] = [
   { value: Gender.Other, label: "Other" },
 ];
 
-export const AddPatientForm = ({ onSubmit, onCancel }: Props) => {
+export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   return (
     <Formik
       initialValues={{
@@ -80,29 +80,21 @@ export const AddPatientForm = ({ onSubmit, onCancel }: Props) => {
             />
             <SelectField label="Gender" name="gender" options={genderOptions} />
             <Grid>
-              <Grid item>
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  style={{ float: "left" }}
-                  type="button"
-                  onClick={onCancel}
-                >
+              <Grid.Column floated="left" width={5}>
+                <Button type="button" onClick={onCancel} color="red">
                   Cancel
                 </Button>
-              </Grid>
-              <Grid item>
+              </Grid.Column>
+              <Grid.Column floated="right" width={5}>
                 <Button
-                  style={{
-                    float: "right",
-                  }}
                   type="submit"
-                  variant="contained"
+                  floated="right"
+                  color="green"
                   disabled={!dirty || !isValid}
                 >
                   Add
                 </Button>
-              </Grid>
+              </Grid.Column>
             </Grid>
           </Form>
         );

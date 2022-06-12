@@ -1,5 +1,5 @@
-import { Dialog, DialogTitle, DialogContent, Divider } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import React from "react";
+import { Modal, Segment } from "semantic-ui-react";
 import AddPatientForm, { PatientFormValues } from "./AddPatientForm";
 
 interface Props {
@@ -10,14 +10,13 @@ interface Props {
 }
 
 const AddPatientModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
-  <Dialog fullWidth={true} open={modalOpen} onClose={() => onClose()}>
-    <DialogTitle>Add a new patient</DialogTitle>
-    <Divider />
-    <DialogContent>
-      {error && <Alert severity="error">{`Error: ${error}`}</Alert>}
+  <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
+    <Modal.Header>Add a new patient</Modal.Header>
+    <Modal.Content>
+      {error && <Segment inverted color="red">{`Error: ${error}`}</Segment>}
       <AddPatientForm onSubmit={onSubmit} onCancel={onClose} />
-    </DialogContent>
-  </Dialog>
+    </Modal.Content>
+  </Modal>
 );
 
 export default AddPatientModal;
