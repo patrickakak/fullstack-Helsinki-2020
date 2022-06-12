@@ -31,6 +31,7 @@ const Hospital: React.FC<HospitalProps> = ({ entry }) => {
           <span>{entry.discharge.date}</span>
         </div>
       )}
+      <div>diagnose by {entry.specialist}</div>
     </Segment>
   );
 };

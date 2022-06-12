@@ -39,6 +39,7 @@ const OccupationalHealthcare: React.FC<OccupationalHealthcareProps> = ({
           </span>
         </div>
       )}
+      <div>diagnose by {entry.specialist}</div>
     </Segment>
   );
 };

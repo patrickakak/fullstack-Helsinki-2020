@@ -35,6 +35,7 @@ const HealthCheck: React.FC<HealthCheckProps> = ({ entry }) => {
       {entry.diagnosisCodes && <Diagnoses entry={entry} />}
 
       <div>{getHealthCheckIcon()}</div>
+      <div>diagnose by {entry.specialist}</div>
     </Segment>
   );
 };
