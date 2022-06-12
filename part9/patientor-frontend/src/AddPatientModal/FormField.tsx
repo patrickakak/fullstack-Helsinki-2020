@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
 import {
   Select,
@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import { Diagnosis, Gender } from "../types";
 import { InputLabel } from "@material-ui/core";
-import Input from '@material-ui/core/Input';
+import Input from "@material-ui/core/Input";
 
 // structure of a single option
 export type GenderOption = {
@@ -24,7 +24,9 @@ type SelectFieldProps = {
   options: GenderOption[];
 };
 
-const FormikSelect = ({ field, ...props }: FieldProps) => <Select {...field} {...props} />;
+const FormikSelect = ({ field, ...props }: FieldProps) => (
+  <Select {...field} {...props} />
+);
 
 export const SelectField = ({ name, label, options }: SelectFieldProps) => (
   <>
@@ -91,7 +93,7 @@ export const NumberField = ({ field, label, min, max }: NumberProps) => {
           if (value > max) setValue(max);
           else if (value <= min) setValue(min);
           else setValue(Math.floor(value));
-      }}
+        }}
       />
       <Typography variant="subtitle2" style={{ color: "red" }}>
         <ErrorMessage name={field.name} />
@@ -111,7 +113,7 @@ export const DiagnosisSelection = ({
 }) => {
   const [selectedDiagnoses, setDiagnoses] = useState<string[]>([]);
   const field = "diagnosisCodes";
-  const onChange = (data: string[]) => {    
+  const onChange = (data: string[]) => {
     setDiagnoses([...data]);
     setFieldTouched(field, true);
     setFieldValue(field, selectedDiagnoses);
@@ -124,9 +126,14 @@ export const DiagnosisSelection = ({
   }));
 
   return (
-    <FormControl style={{ width: 552, marginBottom: '30px' }}>
+    <FormControl style={{ width: 552, marginBottom: "30px" }}>
       <InputLabel>Diagnoses</InputLabel>
-      <Select multiple value={selectedDiagnoses} onChange={(e) => onChange(e.target.value as string[])} input={<Input />}>
+      <Select
+        multiple
+        value={selectedDiagnoses}
+        onChange={(e) => onChange(e.target.value as string[])}
+        input={<Input />}
+      >
         {stateOptions.map((option) => (
           <MenuItem key={option.key} value={option.value}>
             {option.text}
